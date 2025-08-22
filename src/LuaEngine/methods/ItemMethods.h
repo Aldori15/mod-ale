@@ -706,7 +706,7 @@ namespace LuaItem
     /**
      * Sets the random properties for the [Item] from a given random property ID.
      *
-     * @param uint32 randomPropId : The ID of the random property to be applied
+     * @param uint32 randomPropId : The ID of the random property to be applied.
      */
     int SetRandomProperty(lua_State* L, Item* item)
     {
@@ -718,7 +718,7 @@ namespace LuaItem
     /**
      * Sets the random suffix for the [Item] from a given random suffix ID.
      *
-     * @param uint32 randomSuffixId : The ID of the random suffix to be applied
+     * @param uint32 randomSuffixId : The ID of the random suffix to be applied.
      */
     int SetRandomSuffix(lua_State* L, Item* item)
     {

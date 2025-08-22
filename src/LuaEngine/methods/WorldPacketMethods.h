@@ -186,7 +186,7 @@ namespace LuaPacket
         Eluna::Push(L, guid);
         return 1;
     }
-	
+  
     /**
      * Reads and returns a string value from the [WorldPacket].
      *

@@ -23,6 +23,7 @@
 #include "HttpManager.h"
 #include "EventEmitter.h"
 #include "TicketMgr.h"
+#include "LootMgr.h"
 #include <mutex>
 #include <memory>
 
@@ -530,7 +531,7 @@ public:
     void OnGameEventStart(uint32 eventid);
     void OnGameEventStop(uint32 eventid);
 
-    /* Battle Ground */
+    /* Battleground */
     void OnBGStart(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);
     void OnBGEnd(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId, TeamId winner);
     void OnBGCreate(BattleGround* bg, BattleGroundTypeId bgId, uint32 instanceId);

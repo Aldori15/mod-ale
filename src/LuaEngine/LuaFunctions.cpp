@@ -778,7 +778,7 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetRespawnDelay", &LuaCreature::GetRespawnDelay },
     { "GetWanderRadius", &LuaCreature::GetWanderRadius },
     { "GetCurrentWaypointId", &LuaCreature::GetCurrentWaypointId },
-    { "GetCreatureSpawnId", &LuaCreature::GetCreatureSpawnId },
+    { "GetSpawnId", &LuaCreature::GetSpawnId },
     { "GetWaypointPath", &LuaCreature::GetWaypointPath },
     { "GetLootMode", &LuaCreature::GetLootMode },
     { "GetLootRecipient", &LuaCreature::GetLootRecipient },

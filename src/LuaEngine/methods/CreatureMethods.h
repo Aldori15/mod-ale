@@ -1368,11 +1368,11 @@ namespace LuaCreature
     }
 
     /**
-     * Returns the [Loot] object associated with the [Creature]
+     * Returns the [Creature]'s loot.
      *
-     * @return [Loot] loot
+     * @return [Loot] loot : the loot object
      */
-    int GetLoot(lua_State* L, Creature* creature)
+    int GetLoot(lua_State*L, Creature* creature)
     {
         Eluna::Push(L, &creature->loot);
         return 1;

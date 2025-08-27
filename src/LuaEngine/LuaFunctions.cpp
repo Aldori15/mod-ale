@@ -1349,6 +1349,13 @@ ElunaRegister<Loot> LootMethods[] =
     { "GetMoney", &LuaLoot::GetMoney },
     { "GetItems", &LuaLoot::GetItems },
     { "GetUnlootedCount", &LuaLoot::GetUnlootedCount },
+    { "GetLootType", &LuaLoot::GetLootType },
+    { "GetRoundRobinPlayer", &LuaLoot::GetRoundRobinPlayer },
+    { "GetLootOwner", &LuaLoot::GetLootOwner },
+    { "GetContainer", &LuaLoot::GetContainer },
+    { "GetSourceWorldObject", &LuaLoot::GetSourceWorldObject },
+    { "GetItemCount", &LuaLoot::GetItemCount },
+    { "GetMaxSlotForPlayer", &LuaLoot::GetMaxSlotForPlayer },
 
     // Set
     { "AddItem", &LuaLoot::AddItem },
@@ -1357,11 +1364,22 @@ ElunaRegister<Loot> LootMethods[] =
     { "SetUnlootedCount", &LuaLoot::SetUnlootedCount },
     { "UpdateItemIndex", &LuaLoot::UpdateItemIndex },
     { "SetItemLooted", &LuaLoot::SetItemLooted },
+    { "SetLootType", &LuaLoot::SetLootType },
+    { "SetRoundRobinPlayer", &LuaLoot::SetRoundRobinPlayer },
+    { "SetLootOwner", &LuaLoot::SetLootOwner },
+    { "SetContainer", &LuaLoot::SetContainer },
+    { "SetSourceWorldObject", &LuaLoot::SetSourceWorldObject },
+    { "Clear", &LuaLoot::Clear },
+    { "AddLooter", &LuaLoot::AddLooter },
+    { "RemoveLooter", &LuaLoot::RemoveLooter },
 
     // Boolean
-    { "IsLooted", &LuaLoot::IsLooted },
     { "HasItem", &LuaLoot::HasItem },
-    { "Clear", &LuaLoot::Clear },
+    { "HasQuestItems", &LuaLoot::HasQuestItems },
+    { "HasItemForAll", &LuaLoot::HasItemForAll },
+    { "HasOverThresholdItem", &LuaLoot::HasOverThresholdItem },
+    { "IsLooted", &LuaLoot::IsLooted },
+    { "IsEmpty", &LuaLoot::IsEmpty },
 
     { NULL, NULL }
 };

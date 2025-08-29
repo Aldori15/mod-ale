@@ -586,6 +586,21 @@ ElunaRegister<Player> PlayerMethods[] =
     { "RemoveBonusTalent", &LuaPlayer::RemoveBonusTalent },
     { "GetHomebind", &LuaPlayer::GetHomebind },
     { "GetSpells", &LuaPlayer::GetSpells },
+    { "GetAverageItemLevel", &LuaPlayer::GetAverageItemLevel },
+    { "GetBarberShopCost", &LuaPlayer::GetBarberShopCost },
+    { "GetSightRange", &LuaPlayer::GetSightRange },
+    { "GetWeaponProficiency", &LuaPlayer::GetWeaponProficiency },
+    { "GetArmorProficiency", &LuaPlayer::GetArmorProficiency },
+    { "GetAmmoDPS", &LuaPlayer::GetAmmoDPS },
+    { "GetShield", &LuaPlayer::GetShield },
+    { "GetRunesState", &LuaPlayer::GetRunesState },
+    { "GetViewpoint", &LuaPlayer::GetViewpoint },
+    { "GetDodgeFromAgility", &LuaPlayer::GetDodgeFromAgility },
+    { "GetMeleeCritFromAgility", &LuaPlayer::GetMeleeCritFromAgility },
+    { "GetSpellCritFromIntellect", &LuaPlayer::GetSpellCritFromIntellect },
+    { "GetInventoryItem", &LuaPlayer::GetInventoryItem },
+    { "GetBankItem", &LuaPlayer::GetBankItem },
+    { "GetCreationTime", &LuaPlayer::GetCreationTime },
 
     // Boolean
     { "HasTankSpec", &LuaPlayer::HasTankSpec },
@@ -618,24 +633,17 @@ ElunaRegister<Player> PlayerMethods[] =
     { "IsGMVisible", &LuaPlayer::IsGMVisible },
     { "HasQuest", &LuaPlayer::HasQuest },
     { "InBattlegroundQueue", &LuaPlayer::InBattlegroundQueue },
-    // {"IsImmuneToEnvironmentalDamage", &LuaPlayer::IsImmuneToEnvironmentalDamage},        // :IsImmuneToEnvironmentalDamage() - UNDOCUMENTED - Returns true if the player is immune to environmental damage
     { "CanSpeak", &LuaPlayer::CanSpeak },
     { "HasAtLoginFlag", &LuaPlayer::HasAtLoginFlag },
-    // {"InRandomLfgDungeon", &LuaPlayer::InRandomLfgDungeon},                              // :InRandomLfgDungeon() - UNDOCUMENTED - Returns true if the player is in a random LFG dungeon
-    // {"HasPendingBind", &LuaPlayer::HasPendingBind},                                      // :HasPendingBind() - UNDOCUMENTED - Returns true if the player has a pending instance bind
     { "HasAchieved", &LuaPlayer::HasAchieved },
     { "GetAchievementCriteriaProgress", &LuaPlayer::GetAchievementCriteriaProgress },
     { "SetAchievement", &LuaPlayer::SetAchievement },
     { "CanUninviteFromGroup", &LuaPlayer::CanUninviteFromGroup },
     { "IsRested", &LuaPlayer::IsRested },
-    // {"CanFlyInZone", &LuaPlayer::CanFlyInZone},                                          // :CanFlyInZone(mapid, zone) - UNDOCUMENTED - Returns true if the player can fly in the area
-    // {"IsNeverVisible", &LuaPlayer::IsNeverVisible},                                      // :IsNeverVisible() - UNDOCUMENTED - Returns true if the player is never visible
     { "IsVisibleForPlayer", &LuaPlayer::IsVisibleForPlayer },
-    // {"IsUsingLfg", &LuaPlayer::IsUsingLfg},                                              // :IsUsingLfg() - UNDOCUMENTED - Returns true if the player is using LFG
     { "HasQuestForItem", &LuaPlayer::HasQuestForItem },
     { "HasQuestForGO", &LuaPlayer::HasQuestForGO },
     { "CanShareQuest", &LuaPlayer::CanShareQuest },
-    // {"HasReceivedQuestReward", &LuaPlayer::HasReceivedQuestReward},                      // :HasReceivedQuestReward(entry) - UNDOCUMENTED - Returns true if the player has recieved the quest's reward
     { "HasTalent", &LuaPlayer::HasTalent },
     { "IsInSameGroupWith", &LuaPlayer::IsInSameGroupWith },
     { "IsInSameRaidWith", &LuaPlayer::IsInSameRaidWith },
@@ -647,8 +655,6 @@ ElunaRegister<Player> PlayerMethods[] =
     { "CanTitanGrip", &LuaPlayer::CanTitanGrip },
     { "InBattleground", &LuaPlayer::InBattleground },
     { "InArena", &LuaPlayer::InArena },
-    // {"IsOutdoorPvPActive", &LuaPlayer::IsOutdoorPvPActive},                              // :IsOutdoorPvPActive() - UNDOCUMENTED - Returns true if the player is outdoor pvp active
-    // {"IsARecruiter", &LuaPlayer::IsARecruiter},                                          // :IsARecruiter() - UNDOCUMENTED - Returns true if the player is a recruiter
     { "CanUseItem", &LuaPlayer::CanUseItem },
     { "HasSpell", &LuaPlayer::HasSpell },
     { "HasSpellCooldown", &LuaPlayer::HasSpellCooldown },
@@ -656,6 +662,23 @@ ElunaRegister<Player> PlayerMethods[] =
     { "CanFly", &LuaPlayer::CanFly },
     { "IsMoving", &LuaPlayer::IsMoving },
     { "IsFlying", &LuaPlayer::IsFlying },
+    { "IsMaxLevel", &LuaPlayer::IsMaxLevel },
+    { "IsDailyQuestDone", &LuaPlayer::IsDailyQuestDone },
+    { "IsPvP", &LuaPlayer::IsPvP },
+    { "IsFFAPvP", &LuaPlayer::IsFFAPvP },
+    { "IsUsingLfg", &LuaPlayer::IsUsingLfg },
+    { "InRandomLfgDungeon", &LuaPlayer::InRandomLfgDungeon },
+    { "CanInteractWithQuestGiver", &LuaPlayer::CanInteractWithQuestGiver },
+    { "CanSeeStartQuest", &LuaPlayer::CanSeeStartQuest },
+    { "CanTakeQuest", &LuaPlayer::CanTakeQuest },
+    { "CanAddQuest", &LuaPlayer::CanAddQuest },
+    { "CalculateReputationGain", &LuaPlayer::CalculateReputationGain },
+    { "HasTitleByIndex", &LuaPlayer::HasTitleByIndex },
+    { "IsAtGroupRewardDistance", &LuaPlayer::IsAtGroupRewardDistance },
+    { "IsAtLootRewardDistance", &LuaPlayer::IsAtLootRewardDistance },
+    { "CanTeleport", &LuaPlayer::CanTeleport },
+    { "IsSpectator", &LuaPlayer::IsSpectator },
+    // { "HasSpellMod", &LuaPlayer::HasSpellMod },
 
     // Gossip
     { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },
@@ -757,6 +780,21 @@ ElunaRegister<Player> PlayerMethods[] =
     { "SendMovieStart", &LuaPlayer::SendMovieStart },
     { "UpdatePlayerSetting", &LuaPlayer::UpdatePlayerSetting },
     { "TeleportTo", &LuaPlayer::TeleportTo },
+    { "SetPlayerFlag", &LuaPlayer::SetPlayerFlag },
+    { "RemovePlayerFlag", &LuaPlayer::RemovePlayerFlag },
+    { "DoRandomRoll", &LuaPlayer::DoRandomRoll },
+    { "EnvironmentalDamage", &LuaPlayer::EnvironmentalDamage },
+    { "InitTaxiNodesForLevel", &LuaPlayer::InitTaxiNodesForLevel },
+    { "AbandonQuest", &LuaPlayer::AbandonQuest },
+    { "AddWeaponProficiency", &LuaPlayer::AddWeaponProficiency },
+    { "AddArmorProficiency", &LuaPlayer::AddArmorProficiency },
+    { "SetAmmo", &LuaPlayer::SetAmmo },
+    { "RemoveAmmo", &LuaPlayer::RemoveAmmo },
+    { "SetCanTeleport", &LuaPlayer::SetCanTeleport },
+    { "SetIsSpectator", &LuaPlayer::SetIsSpectator },
+    { "SetViewpoint", &LuaPlayer::SetViewpoint },
+    { "ToggleInstantFlight", &LuaPlayer::ToggleInstantFlight },
+    { "SetCreationTime", &LuaPlayer::SetCreationTime },
 
     { NULL, NULL }
 };

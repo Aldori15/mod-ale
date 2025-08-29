@@ -1099,9 +1099,7 @@ public:
     {
         if (!reload)
         {
-            if (!sLog->ShouldLog("eluna", LOG_LEVEL_INFO))
-                sLog->LoadFromConfig();
-
+            ///- Initialize Lua Engine
             LOG_INFO("eluna", "Initialize Eluna Lua Engine...");
             Eluna::Initialize();
         }

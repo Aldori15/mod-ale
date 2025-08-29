@@ -147,7 +147,7 @@ if __name__ == '__main__':
     # Render the search index.
     render('search-index.js', 'search-index.js', level=0, classes=classes)
     # Render the date.
-    render('date.js', 'date.js', level=0, currdate=time.strftime("%d/%m/%Y"))
+    render('date.js', 'date.js', level=0, currdate=time.strftime("%m/%d/%Y"))
 
     for class_ in classes:
         print(f'Rendering pages for class {class_.name}...')

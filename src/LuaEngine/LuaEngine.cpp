@@ -50,6 +50,7 @@ Eluna* Eluna::GEluna = NULL;
 bool Eluna::reload = false;
 bool Eluna::initialized = false;
 Eluna::LockType Eluna::lock;
+std::unique_ptr<ElunaFileWatcher> Eluna::fileWatcher;
 
 // Global bytecode cache that survives Eluna reloads
 static std::unordered_map<std::string, GlobalCacheEntry> globalBytecodeCache;
@@ -75,12 +76,27 @@ void Eluna::Initialize()
 
     // Create global eluna
     GEluna = new Eluna();
+
+    // Start file watcher if enabled
+    if (eConfigMgr->GetOption<bool>("Eluna.AutoReload", false))
+    {
+        uint32 watchInterval = eConfigMgr->GetOption<uint32>("Eluna.AutoReloadInterval", 1);
+        fileWatcher = std::make_unique<ElunaFileWatcher>();
+        fileWatcher->StartWatching(lua_folderpath, watchInterval);
+    }
 }
 
 void Eluna::Uninitialize()
 {
     LOCK_ELUNA;
     ASSERT(IsInitialized());
+
+    // Stop file watcher
+    if (fileWatcher)
+    {
+        fileWatcher->StopWatching();
+        fileWatcher.reset();
+    }
 
     delete GEluna;
     GEluna = NULL;

@@ -848,17 +848,6 @@ namespace LuaCreature
     }
 
     /**
-     * Returns the guid of the [Creature] that is used as the ID in the database
-     *
-     * @return uint32 dbguid
-     */
-    int GetDBTableGUIDLow(lua_State* L, Creature* creature)
-    {
-        Eluna::Push(L, creature->GetSpawnId());
-        return 1;
-    }
-
-    /**
      * Returns the [Creature]'s current ReactState.
      *
      * <pre>

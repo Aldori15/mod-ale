@@ -849,7 +849,6 @@ ElunaRegister<Creature> CreatureMethods[] =
     { "GetExtraFlags", &LuaCreature::GetExtraFlags },
     { "GetRank", &LuaCreature::GetRank },
     { "GetShieldBlockValue", &LuaCreature::GetShieldBlockValue },
-    { "GetDBTableGUIDLow", &LuaCreature::GetDBTableGUIDLow },
     { "GetCreatureFamily", &LuaCreature::GetCreatureFamily },
     { "GetReactState", &LuaCreature::GetReactState },
     { "GetLoot", &LuaCreature::GetLoot },

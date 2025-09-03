@@ -760,3 +760,11 @@ bool Eluna::CanPlayerResurrect(Player* player)
     Push(player);
     return CallAllFunctionsBool(PlayerEventBindings, key);
 }
+
+void Eluna::OnPlayerQuestAccept(Player* player, Quest const* quest)
+{
+    START_HOOK(PLAYER_EVENT_ON_QUEST_ACCEPT);
+    Push(player);
+    Push(quest);
+    CallAllFunctions(PlayerEventBindings, key);
+}

@@ -520,4 +520,4 @@ namespace LuaLoot
         return 0;
     }
 };
-#endif
+#endif // LOOTMETHODS_H

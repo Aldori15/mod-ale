@@ -65,7 +65,7 @@ namespace LuaGlobalFunctions
     {
         const char* key = Eluna::CHECKVAL<const char*>(L, 1);
         if (!key) return 0;
-
+        
         std::string val = sConfigMgr->GetOption<std::string>(key, "", false);
 
         if (val.empty())
@@ -76,7 +76,7 @@ namespace LuaGlobalFunctions
 
         std::string lower = val;
         std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-
+        
         if (lower == "true")
         {
             Eluna::Push(L, true);
@@ -87,13 +87,13 @@ namespace LuaGlobalFunctions
             Eluna::Push(L, false);
             return 1;
         }
-
+        
         auto intVal = Acore::StringTo<uint32>(val);
         if (intVal) {
             Eluna::Push(L, *intVal);
             return 1;
         }
-
+        
         Eluna::Push(L, val);
         return 1;
     }

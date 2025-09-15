@@ -1361,19 +1361,10 @@ namespace LuaCreature
      *
      * @return [Loot] loot : the loot object
      */
-    int GetLoot(lua_State*L, Creature* creature)
+    int GetLoot(lua_State* L, Creature* creature)
     {
         Eluna::Push(L, &creature->loot);
         return 1;
-    }
-
-    /**
-     * Removes all loot from the [Creature]'s corpse
-     */
-    int AllLootRemoved(lua_State* /*L*/, Creature* creature)
-    {
-        creature->AllLootRemovedFromCorpse();
-        return 0;
     }
 };
 #endif

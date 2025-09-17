@@ -70,6 +70,8 @@ luaL_Reg GlobalMethods[] =
     { "RegisterInstanceEvent", &LuaGlobalFunctions::RegisterInstanceEvent },
     { "RegisterTicketEvent", &LuaGlobalFunctions::RegisterTicketEvent },
     { "RegisterSpellEvent", &LuaGlobalFunctions::RegisterSpellEvent },
+    { "RegisterAllCreatureEvent", &LuaGlobalFunctions::RegisterAllCreatureEvent },
+
 
     { "ClearBattleGroundEvents", &LuaGlobalFunctions::ClearBattleGroundEvents },
     { "ClearCreatureEvents", &LuaGlobalFunctions::ClearCreatureEvents },
@@ -89,6 +91,7 @@ luaL_Reg GlobalMethods[] =
     { "ClearInstanceEvents", &LuaGlobalFunctions::ClearInstanceEvents },
     { "ClearTicketEvents", &LuaGlobalFunctions::ClearTicketEvents },
     { "ClearSpellEvents", &LuaGlobalFunctions::ClearSpellEvents },
+    { "ClearAllCreatureEvents", &LuaGlobalFunctions::ClearAllCreatureEvents },
 
     // Getters
     { "GetLuaEngine", &LuaGlobalFunctions::GetLuaEngine },
@@ -1924,7 +1927,7 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<GmTicket>::Register(E, "Ticket");
     ElunaTemplate<GmTicket>::SetMethods(E, TicketMethods);
-  
+
     ElunaTemplate<SpellInfo>::Register(E, "SpellInfo");
     ElunaTemplate<SpellInfo>::SetMethods(E, SpellInfoMethods);
 
@@ -1933,6 +1936,8 @@ void RegisterFunctions(Eluna* E)
 
     ElunaTemplate<SpellEntry>::Register(E, "SpellEntry");
     ElunaTemplate<SpellEntry>::SetMethods(E, SpellEntryMethods);
+
+    ElunaTemplate<CreatureTemplate>::Register(E, "CreatureTemplate");
 
     ElunaTemplate<long long>::Register(E, "long long", true);
 

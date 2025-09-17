@@ -85,7 +85,7 @@ make -j$(nproc)
 - [Implementation Details](https://github.com/azerothcore/mod-eluna/tree/master/docs/IMPL_DETAILS.md)
 
 ### API Reference
-- **[mod-eluna API Documentation](https://www.azerothcore.org/eluna/)** - Complete API reference for mod-eluna
+- **[mod-eluna API Documentation](https://aldori15.github.io/eluna-docs/)** - Complete API reference for mod-eluna
 - **[Hooks Documentation](https://github.com/azerothcore/mod-eluna/blob/master/src/LuaEngine/Hooks.h)** - Available event hooks
 - **[Lua 5.2 Reference](http://www.lua.org/manual/5.2/)** - Official Lua language documentation
 

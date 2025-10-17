@@ -1132,7 +1132,7 @@ namespace LuaCreature
     int DespawnOrUnsummon(lua_State* L, Creature* creature)
     {
         uint32 msTimeToDespawn = Eluna::CHECKVAL<uint32>(L, 2, 0);
-        creature->DespawnOrUnsummon(Milliseconds(msTimeToDespawn));
+        creature->DespawnOrUnsummon(msTimeToDespawn);
 
         return 0;
     }

@@ -4970,7 +4970,6 @@ namespace LuaPlayer
      *     };
      *
      */
-
     int ApplyRatingMod(lua_State* L, Player* player)
     {
         int32 stat = ALE::CHECKVAL<int32>(L, 2);

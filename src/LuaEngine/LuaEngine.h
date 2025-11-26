@@ -461,6 +461,7 @@ public:
     void OnPVPKill(Player* pKiller, Player* pKilled);
     void OnCreatureKill(Player* pKiller, Creature* pKilled);
     void OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled);
+    void OnPlayerJustDied(Player* pPlayer);
     void OnLevelChanged(Player* pPlayer, uint8 oldLevel);
     void OnFreeTalentPointsChanged(Player* pPlayer, uint32 newPoints);
     void OnTalentsReset(Player* pPlayer, bool noCost);

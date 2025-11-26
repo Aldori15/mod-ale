@@ -238,6 +238,8 @@ namespace Hooks
         PLAYER_EVENT_ON_MODIFY_HEAL_RECEIVED                =     71,       // (event, player, target, heal, spellInfo) - Can return new heal amount
         PLAYER_EVENT_ON_DEAL_DAMAGE                         =     72,       // (event, player, target, damage, damagetype) - Can return new damage amount
 
+        PLAYER_EVENT_ON_PLAYER_JUST_DIED                    =     80,       // (event, player)
+
         PLAYER_EVENT_COUNT
     };
 

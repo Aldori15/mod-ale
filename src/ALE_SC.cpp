@@ -766,6 +766,11 @@ public:
         sALE->OnPlayerKilledByCreature(killer, killed);
     }
 
+    void OnPlayerJustDied(Player* player) override
+    {
+        sALE->OnPlayerJustDied(player);
+    }
+
     void OnPlayerLevelChanged(Player* player, uint8 oldLevel) override
     {
         sALE->OnLevelChanged(player, oldLevel);

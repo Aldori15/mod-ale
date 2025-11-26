@@ -178,6 +178,13 @@ void ALE::OnPlayerKilledByCreature(Creature* pKiller, Player* pKilled)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void ALE::OnPlayerJustDied(Player* pPlayer)
+{
+    START_HOOK(PLAYER_EVENT_ON_PLAYER_JUST_DIED);
+    Push(pPlayer);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 void ALE::OnLevelChanged(Player* pPlayer, uint8 oldLevel)
 {
     START_HOOK(PLAYER_EVENT_ON_LEVEL_CHANGE);

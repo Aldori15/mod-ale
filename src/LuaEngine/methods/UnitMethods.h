@@ -71,7 +71,7 @@ namespace LuaUnit
      * @param int8 type : The type of modifier to apply
      * @param float value : The value to apply to the stat
      * @param bool apply = false : Whether the modifier should be applied or removed
-     * @return bool : Whether the stat modification was successful
+     * @return bool isStatModified : Whether the stat modification was successful
      */
     int HandleStatFlatModifier(lua_State* L, Unit* unit)
     {
@@ -90,7 +90,7 @@ namespace LuaUnit
      *
      * @param [Unit] who : [Unit] to attack
      * @param bool meleeAttack = false: attack with melee or not
-     * @return didAttack : if the [Unit] did not attack
+     * @return bool didAttack : if the [Unit] did not attack
      */
     int Attack(lua_State* L, Unit* unit)
     {

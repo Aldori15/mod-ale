@@ -1771,6 +1771,7 @@ ALERegister<Loot> LootMethods[] =
     { "Clear", &LuaLoot::Clear },
     { "AddLooter", &LuaLoot::AddLooter },
     { "RemoveLooter", &LuaLoot::RemoveLooter },
+    { "RefreshForPlayer", &LuaLoot::RefreshForPlayer },
 
     // Boolean
     { "HasItem", &LuaLoot::HasItem },

@@ -601,5 +601,50 @@ namespace LuaLoot
         loot->RemoveLooter(player->GetGUID());
         return 0;
     }
+
+    /**
+     * Rebuilds the per-player loot-view caches (quest/FFA/conditional) for this Loot.
+     * Useful if Lua modifies loot contents after the player already opened the loot window.
+     *
+     * @param [Player] player : the player whose loot-view cache should be rebuilt
+     */
+    int RefreshForPlayer(lua_State* L, Loot* loot)
+    {
+        Player* player = ALE::CHECKOBJ<Player>(L, 2);
+        if (!loot || !player)
+            return 0;
+
+        ObjectGuid guid = player->GetGUID();
+
+        // We only have const getters, but the underlying Loot is not const.
+        // We const_cast so we can erase this player's cached lists.
+        auto& questMap = const_cast<QuestItemMap&>(loot->GetPlayerQuestItems());
+        auto& ffaMap   = const_cast<QuestItemMap&>(loot->GetPlayerFFAItems());
+        auto& condMap  = const_cast<QuestItemMap&>(loot->GetPlayerNonQuestNonFFAConditionalItems());
+
+        auto erasePlayerList = [&](QuestItemMap& m)
+        {
+            auto it = m.find(guid);
+            if (it != m.end())
+            {
+                delete it->second;
+                m.erase(it);
+            }
+        };
+
+        erasePlayerList(questMap);
+        erasePlayerList(ffaMap);
+        erasePlayerList(condMap);
+
+        // Important: quest loot filling uses is_blocked to "assign" non-FFA quest items.
+        // If we don't reset it, the refill can skip items and the player sees nothing.
+        for (LootItem& qi : loot->quest_items)
+            qi.is_blocked = false;
+
+        // Rebuild the caches for this player
+        loot->FillNotNormalLootFor(player);
+
+        return 0;
+    }
 };
 #endif // LOOTMETHODS_H

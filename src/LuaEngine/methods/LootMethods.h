@@ -39,7 +39,6 @@ namespace LuaLoot
      * @param uint16 lootMode : loot mode for the item
      * @param bool needsQuest = false : if `true`, the item requires a quest to be looted
      * @param bool allowStacking = true : if `true`, allow items to stack in the loot window
-     * @param uint32 stripFlagsMask = 0 : (optional) bitmask of ItemTemplate flags to temporarily strip during this AddItem call
      */
     int AddItem(lua_State* L, Loot* loot)
     {
@@ -50,41 +49,6 @@ namespace LuaLoot
         uint16 loot_mode = ALE::CHECKVAL<uint16>(L, 6);
         bool needs_quest = ALE::CHECKVAL<bool>(L, 7, false);
         bool allow_stacking = ALE::CHECKVAL<bool>(L, 8, true);
-        uint32 strip_mask = ALE::CHECKVAL<uint32>(L, 9, false);
-
-        ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemid);
-
-        // RAII guard to restore template flags even if we early-return
-        struct TemplateFlagGuard
-        {
-            ItemTemplate const* proto{nullptr};
-            uint32 oldFlags{0};
-            bool active{false};
-
-            TemplateFlagGuard(ItemTemplate const* p, uint32 mask)
-            {
-                if (!p || !mask)
-                    return;
-
-                uint32 cur = uint32(p->Flags);
-                if ((cur & mask) == 0)
-                    return;
-
-                proto = p;
-                oldFlags = cur;
-                active = true;
-
-                const_cast<ItemTemplate*>(proto)->Flags = ItemFlags(cur & ~mask);
-            }
-
-            ~TemplateFlagGuard()
-            {
-                if (active && proto)
-                    const_cast<ItemTemplate*>(proto)->Flags = ItemFlags(oldFlags);
-            }
-        };
-
-        TemplateFlagGuard guard(proto, strip_mask);
 
         if (allow_stacking)
         {

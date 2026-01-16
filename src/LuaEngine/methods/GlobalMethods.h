@@ -779,7 +779,7 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_CAN_GROUP_INVITE                     =     55,       // (event, player, memberName) - Can return false to prevent inviting
      *     PLAYER_EVENT_ON_GROUP_ROLL_REWARD_ITEM               =     56,       // (event, player, item, count, voteType, roll)
      *     PLAYER_EVENT_ON_BG_DESERTION                         =     57,       // (event, player, type)
-     *     PLAYER_EVENT_ON_PET_KILL                             =     58,       // (event, player, killer)
+     *     PLAYER_EVENT_ON_PET_KILL                             =     58,       // (event, player, killed)
      *     PLAYER_EVENT_ON_CAN_RESURRECT                        =     59,       // (event, player)
      *     PLAYER_EVENT_ON_CAN_UPDATE_SKILL                     =     60,       // (event, player, skill_id) -- Can return true or false
      *     PLAYER_EVENT_ON_BEFORE_UPDATE_SKILL                  =     61,       // (event, player, skill_id, value, max, step) -- Can return new amount

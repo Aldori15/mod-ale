@@ -1219,6 +1219,22 @@ class ALE_UnitScript : public UnitScript
 public:
     ALE_UnitScript() : UnitScript("ALE_UnitScript") { }
 
+    void OnUnitDeath(Unit* unit, Unit* killer) override
+    {
+        if (!unit || !killer || !unit->IsCreature() || !killer->IsCreature())
+            return;
+
+        Creature* killerCreature = killer->ToCreature();
+        if (killerCreature->IsPet() || killerCreature->IsTotem())
+            return;
+
+        if (!(killerCreature->IsGuardian() || killerCreature->IsSummon()))
+            return;
+
+        if (Player* owner = killerCreature->GetCharmerOrOwnerPlayerOrPlayerItself())
+            sALE->OnCreatureKilledByGuardian(owner, unit->ToCreature());
+    }
+
     void OnAuraApply(Unit* unit, Aura* aura) override
     {
         if (!unit || !aura) return;

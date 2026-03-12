@@ -714,6 +714,14 @@ void ALE::OnCreatureKilledByPet(Player* player, Creature* killed)
     CallAllFunctions(PlayerEventBindings, key);
 }
 
+void ALE::OnCreatureKilledByGuardian(Player* player, Creature* killed)
+{
+    START_HOOK(PLAYER_EVENT_ON_GUARDIAN_KILL);
+    Push(player);
+    Push(killed);
+    CallAllFunctions(PlayerEventBindings, key);
+}
+
 bool ALE::OnPlayerCanUpdateSkill(Player* player, uint32 skill_id)
 {
     START_HOOK_WITH_RETVAL(PLAYER_EVENT_ON_CAN_UPDATE_SKILL, true);

@@ -1225,10 +1225,17 @@ public:
             return;
 
         Creature* killerCreature = killer->ToCreature();
-        if (killerCreature->IsPet() || killerCreature->IsTotem())
+        if (killerCreature->IsTotem())
             return;
 
-        if (!(killerCreature->IsGuardian() || killerCreature->IsSummon()))
+        if (killerCreature->IsPet())
+        {
+            // Force of Nature treants are created as pet-style summons,
+            // but they should still drive the guardian kill event.
+            if (killerCreature->GetEntry() != NPC_TREANT)
+                return;
+        }
+        else if (!(killerCreature->IsGuardian() || killerCreature->IsSummon()))
             return;
 
         if (Player* owner = killerCreature->GetCharmerOrOwnerPlayerOrPlayerItself())

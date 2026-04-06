@@ -10,6 +10,7 @@
 #include "BindingMap.h"
 #include "ALEIncludes.h"
 #include "ALETemplate.h"
+#include "ALEEventMgr.h"
 
 using namespace Hooks;
 
@@ -79,6 +80,10 @@ void ALE::OnAddToWorld(Creature* pCreature)
 
 void ALE::OnRemoveFromWorld(Creature* pCreature)
 {
+    // Clean events when creature leaves world to prevent memory leaks
+    if (pCreature->ALEEvents)
+        pCreature->ALEEvents->SetStates(LUAEVENT_STATE_ABORT);
+
     START_HOOK(CREATURE_EVENT_ON_REMOVE, pCreature);
     Push(pCreature);
     CallAllFunctions(CreatureEventBindings, CreatureUniqueBindings, entry_key, unique_key);
@@ -145,6 +150,10 @@ bool ALE::DamageTaken(Creature* me, Unit* attacker, uint32& damage)
 //Called at creature death
 bool ALE::JustDied(Creature* me, Unit* killer)
 {
+    // Clean up all events before death hook to prevent memory leaks
+    if (me->ALEEvents)
+        me->ALEEvents->SetStates(LUAEVENT_STATE_ABORT);
+
     On_Reset(me);
     START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_DIED, me, false);
     Push(me);
@@ -201,6 +210,10 @@ bool ALE::AttackStart(Creature* me, Unit* target)
 // Called for reaction at stopping attack at no attackers or targets
 bool ALE::EnterEvadeMode(Creature* me)
 {
+    // Clean up all events before evade hook to prevent memory leaks
+    if (me->ALEEvents)
+        me->ALEEvents->SetStates(LUAEVENT_STATE_ABORT);
+
     On_Reset(me);
     START_HOOK_WITH_RETVAL(CREATURE_EVENT_ON_LEAVE_COMBAT, me, false);
     Push(me);

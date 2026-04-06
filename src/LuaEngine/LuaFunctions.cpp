@@ -460,6 +460,9 @@ ALERegister<Unit> UnitMethods[] =
     { "SendChatMessageToPlayer", &LuaUnit::SendChatMessageToPlayer },
     { "PerformEmote", &LuaUnit::PerformEmote },
     { "EmoteState", &LuaUnit::EmoteState },
+    { "SendPlaySpellVisual", &LuaUnit::SendPlaySpellVisual },
+    { "SendPlaySpellImpact", &LuaUnit::SendPlaySpellImpact },
+    { "DisableRotate", &LuaUnit::DisableRotate },
     { "CountPctFromCurHealth", &LuaUnit::CountPctFromCurHealth },
     { "CountPctFromMaxHealth", &LuaUnit::CountPctFromMaxHealth },
     { "Dismount", &LuaUnit::Dismount },
@@ -1001,6 +1004,8 @@ ALERegister<GameObject> GameObjectMethods[] =
     { "Respawn", &LuaGameObject::Respawn },
     { "SaveToDB", &LuaGameObject::SaveToDB },
     { "AddLoot", &LuaGameObject::AddLoot },
+    { "CastSpell", &LuaGameObject::CastSpell },
+    { "SendCustomAnim", &LuaGameObject::SendCustomAnim },
 
     { NULL, NULL }
 };

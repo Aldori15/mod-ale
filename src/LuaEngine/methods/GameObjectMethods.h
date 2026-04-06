@@ -368,5 +368,34 @@ namespace LuaGameObject
         go->SetRespawnDelay(respawn);
         return 0;
     }
+
+    /**
+     * Casts a spell from the [GameObject].
+     *
+     * If target is nil, the spell is cast at the [GameObject]'s position
+     * (useful for area-of-effect spells like floor eruptions).
+     *
+     * @param [Unit] target = nil : spell target, or nil for positional cast
+     * @param uint32 spellId : spell entry ID
+     */
+    int CastSpell(lua_State* L, GameObject* go)
+    {
+        Unit* target = ALE::CHECKOBJ<Unit>(L, 2, false);
+        uint32 spellId = ALE::CHECKVAL<uint32>(L, 3);
+        go->CastSpell(target, spellId);
+        return 0;
+    }
+
+    /**
+     * Sends a custom animation for the [GameObject] to nearby players.
+     *
+     * @param uint32 animId : animation index
+     */
+    int SendCustomAnim(lua_State* L, GameObject* go)
+    {
+        uint32 animId = ALE::CHECKVAL<uint32>(L, 2);
+        go->SendCustomAnim(animId);
+        return 0;
+    }
 };
 #endif

@@ -2955,5 +2955,49 @@ namespace LuaUnit
         ALE::Push(L, unit->HasUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT));
         return 1;
     }
+
+    /**
+     * Plays a [SpellVisualKit] on the [Unit].
+     *
+     * The visual plays once and fades. Does not cast a spell.
+     * Kit IDs reference SpellVisualKit.dbc.
+     *
+     * @param uint32 kitId : SpellVisualKit.dbc ID
+     */
+    int SendPlaySpellVisual(lua_State* L, Unit* unit)
+    {
+        uint32 kitId = ALE::CHECKVAL<uint32>(L, 2);
+        unit->SendPlaySpellVisual(kitId);
+        return 0;
+    }
+
+    /**
+     * Plays a [SpellVisualKit] impact effect on a target.
+     *
+     * @param [Unit] target : the unit to play the impact on
+     * @param uint32 kitId : SpellVisualKit.dbc ID
+     */
+    int SendPlaySpellImpact(lua_State* L, Unit* unit)
+    {
+        Unit* target = ALE::CHECKOBJ<Unit>(L, 2);
+        uint32 kitId = ALE::CHECKVAL<uint32>(L, 3);
+        unit->SendPlaySpellImpact(target->GetGUID(), kitId);
+        return 0;
+    }
+
+    /**
+     * Locks or unlocks the [Creature]'s rotation.
+     *
+     * When locked, the creature cannot turn to face targets.
+     * Use before cone/breath casts to fix direction. Only works on creatures.
+     *
+     * @param bool apply = true : true to lock, false to unlock
+     */
+    int DisableRotate(lua_State* L, Unit* unit)
+    {
+        bool apply = ALE::CHECKVAL<bool>(L, 2, true);
+        unit->DisableRotate(apply);
+        return 0;
+    }
 };
 #endif

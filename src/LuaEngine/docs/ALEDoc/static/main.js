@@ -459,7 +459,7 @@
                     shown.push(item);
                     name = item.name;
                     type = itemTypes[item.ty];
-                    displayPath = item.path === 'PlayerBot' ? 'PlayerBots' : item.path;
+                    displayPath = item.path;
                     methodSeparator = item.path === 'PlayerBot' ? '.' : '::';
 
                     output += '<tr class="' + type + ' result"><td>';

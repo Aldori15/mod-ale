@@ -22,7 +22,7 @@
 {% block document_title -%}
     Method
     <a class="mod" href="{{ root(current_class.name + '/index.html') }}">
-        {{- 'PlayerBots' if current_class.name == 'PlayerBot' else current_class.name -}}
+        {{- current_class.name -}}
     </a>{{ '.' if current_class.name == 'PlayerBot' else ':' }}<a class="fn" href="{{ root(current_class.name + '/' + current_method.name + '.html') }}">
         {{- current_method.name -}}
     </a>

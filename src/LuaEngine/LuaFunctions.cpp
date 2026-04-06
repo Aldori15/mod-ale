@@ -727,6 +727,7 @@ ALERegister<Player> PlayerMethods[] =
     { "HasKnownTaxiNode", &LuaPlayer::HasKnownTaxiNode },
     { "IsBot", &LuaPlayer::IsBot },
     // { "HasSpellMod", &LuaPlayer::HasSpellMod },
+    { "HasGlobalCooldown", &LuaPlayer::HasGlobalCooldown },
 
     // Gossip
     { "GossipMenuAddItem", &LuaPlayer::GossipMenuAddItem },

@@ -5137,5 +5137,22 @@ namespace LuaPlayer
     #endif
         return 1;
     }
+
+    /**
+     * Returns whether the [Player] is currently on global cooldown.
+     *
+     * @return bool isOnGcd : true if the player is on global cooldown, false otherwise
+     */
+    int HasGlobalCooldown(lua_State* L, Player* player)
+    {
+        SpellInfo const* info = sSpellMgr->GetSpellInfo(61304);
+        if (!info)
+        {
+            ALE::Push(L, false);
+            return 1;
+        }
+        ALE::Push(L, player->GetGlobalCooldownMgr().HasGlobalCooldown(info));
+        return 1;
+    }
 };
 #endif

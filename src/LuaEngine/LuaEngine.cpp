@@ -1038,6 +1038,21 @@ void ALE::Push(lua_State* luastate, SpellEntry const& spell)
     Push(luastate, &spell);
 }
 
+void ALE::Push(lua_State* luastate, SkillLineEntry const& entry)
+{
+    Push(luastate, &entry);
+}
+
+void ALE::Push(lua_State* luastate, SkillLineAbilityEntry const& entry)
+{
+    Push(luastate, &entry);
+}
+
+void ALE::Push(lua_State* luastate, SkillTiersEntry const& entry)
+{
+    Push(luastate, &entry);
+}
+
 void ALE::Push(lua_State* luastate, CreatureTemplate const* creatureTemplate)
 {
     Push<CreatureTemplate>(luastate, creatureTemplate);

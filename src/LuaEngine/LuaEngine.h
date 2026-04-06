@@ -301,6 +301,9 @@ public:
     static void Push(lua_State* luastate, ObjectGuid const guid);
     static void Push(lua_State* luastate, GemPropertiesEntry const& gemProperties);
     static void Push(lua_State* luastate, SpellEntry const& spell);
+    static void Push(lua_State* luastate, SkillLineEntry const& entry);
+    static void Push(lua_State* luastate, SkillLineAbilityEntry const& entry);
+    static void Push(lua_State* luastate, SkillTiersEntry const& entry);
     static void Push(lua_State* luastate, CreatureTemplate const* creatureTemplate);
     template<typename T>
     static void Push(lua_State* luastate, T const* ptr)

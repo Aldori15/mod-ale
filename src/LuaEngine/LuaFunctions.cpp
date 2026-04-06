@@ -49,6 +49,9 @@ extern "C"
 // DBCStores includes
 #include "GemPropertiesEntryMethods.h"
 #include "SpellEntryMethods.h"
+#include "SkillLineEntryMethods.h"
+#include "SkillLineAbilityEntryMethods.h"
+#include "SkillTiersEntryMethods.h"
 
 luaL_Reg GlobalMethods[] =
 {
@@ -1694,6 +1697,44 @@ ALERegister<SpellEntry> SpellEntryMethods[] =
     { NULL, NULL }
 };
 
+ALERegister<SkillLineEntry> SkillLineEntryMethods[] =
+{
+    // Getters
+    { "GetId", &LuaSkillLineEntry::GetId },
+    { "GetCategoryId", &LuaSkillLineEntry::GetCategoryId },
+    { "GetName", &LuaSkillLineEntry::GetName },
+    { "GetSpellIcon", &LuaSkillLineEntry::GetSpellIcon },
+    { "GetCanLink", &LuaSkillLineEntry::GetCanLink },
+
+    { NULL, NULL }
+};
+
+ALERegister<SkillLineAbilityEntry> SkillLineAbilityEntryMethods[] =
+{
+    // Getters
+    { "GetId", &LuaSkillLineAbilityEntry::GetId },
+    { "GetSkillLine", &LuaSkillLineAbilityEntry::GetSkillLine },
+    { "GetSpell", &LuaSkillLineAbilityEntry::GetSpell },
+    { "GetRaceMask", &LuaSkillLineAbilityEntry::GetRaceMask },
+    { "GetClassMask", &LuaSkillLineAbilityEntry::GetClassMask },
+    { "GetMinSkillLineRank", &LuaSkillLineAbilityEntry::GetMinSkillLineRank },
+    { "GetSupercededBySpell", &LuaSkillLineAbilityEntry::GetSupercededBySpell },
+    { "GetAcquireMethod", &LuaSkillLineAbilityEntry::GetAcquireMethod },
+    { "GetTrivialSkillLineRankHigh", &LuaSkillLineAbilityEntry::GetTrivialSkillLineRankHigh },
+    { "GetTrivialSkillLineRankLow", &LuaSkillLineAbilityEntry::GetTrivialSkillLineRankLow },
+
+    { NULL, NULL }
+};
+
+ALERegister<SkillTiersEntry> SkillTiersEntryMethods[] =
+{
+    // Getters
+    { "GetId", &LuaSkillTiersEntry::GetId },
+    { "GetValue", &LuaSkillTiersEntry::GetValue },
+
+    { NULL, NULL }
+};
+
 ALERegister<Pet> PetMethods[] =
 {
     // Getters
@@ -1977,6 +2018,15 @@ void RegisterFunctions(ALE* E)
 
     ALETemplate<SpellEntry>::Register(E, "SpellEntry");
     ALETemplate<SpellEntry>::SetMethods(E, SpellEntryMethods);
+
+    ALETemplate<SkillLineEntry>::Register(E, "SkillLineEntry");
+    ALETemplate<SkillLineEntry>::SetMethods(E, SkillLineEntryMethods);
+
+    ALETemplate<SkillLineAbilityEntry>::Register(E, "SkillLineAbilityEntry");
+    ALETemplate<SkillLineAbilityEntry>::SetMethods(E, SkillLineAbilityEntryMethods);
+
+    ALETemplate<SkillTiersEntry>::Register(E, "SkillTiersEntry");
+    ALETemplate<SkillTiersEntry>::SetMethods(E, SkillTiersEntryMethods);
 
     ALETemplate<CreatureTemplate>::Register(E, "CreatureTemplate");
 

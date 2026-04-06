@@ -515,6 +515,7 @@ public:
     void OnPlayerModifyHealReceived(Player* player, Unit* target, uint32& heal, SpellInfo const* spellInfo);
     uint32 OnPlayerDealDamage(Player* player, Unit* pVictim, uint32 damage, DamageEffectType damagetype);
     void OnPlayerReleasedGhost(Player* player);
+    void OnPlayerBeforeLogout(Player* player);
 
     /* Vehicle */
     void OnInstall(Vehicle* vehicle);

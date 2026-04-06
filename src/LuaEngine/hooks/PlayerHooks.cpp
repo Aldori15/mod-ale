@@ -989,3 +989,10 @@ uint32 ALE::OnPlayerDealDamage(Player* player, Unit* target, uint32 damage, Dama
     CleanUpStack(4);
     return result;
 }
+
+void ALE::OnPlayerBeforeLogout(Player* player)
+{
+    START_HOOK(PLAYER_EVENT_ON_BEFORE_LOGOUT);
+    Push(player);
+    CallAllFunctions(PlayerEventBindings, key);
+}

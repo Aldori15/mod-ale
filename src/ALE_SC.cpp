@@ -644,7 +644,8 @@ public:
         PLAYERHOOK_ON_BEFORE_UPDATE_SKILL,
         PLAYERHOOK_ON_UPDATE_SKILL,
         PLAYERHOOK_CAN_RESURRECT,
-        PLAYERHOOK_ON_PLAYER_RELEASED_GHOST
+        PLAYERHOOK_ON_PLAYER_RELEASED_GHOST,
+        PLAYERHOOK_ON_BEFORE_LOGOUT
     }) { }
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool /*applySickness*/) override
@@ -970,6 +971,11 @@ public:
     void OnPlayerReleasedGhost(Player* player) override
     {
         sALE->OnPlayerReleasedGhost(player);
+    }
+
+    void OnPlayerBeforeLogout(Player* player) override
+    {
+        sALE->OnPlayerBeforeLogout(player);
     }
 };
 

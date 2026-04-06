@@ -1105,5 +1105,58 @@ namespace LuaWorldObject
             obj->PlayDistanceSound(soundId);
         return 0;
     }
+
+    /**
+     * Returns true if the [WorldObject] is outdoors
+     *
+     * @return bool isOutdoors
+     */
+    int IsOutdoors(lua_State* L, WorldObject* obj)
+    {
+        ALE::Push(L, obj->IsOutdoors());
+        return 1;
+    }
+
+    /**
+     * Returns the ground Z (terrain height) at the [WorldObject]'s position
+     *
+     * @return float groundZ
+     */
+    int GetGroundZ(lua_State* L, WorldObject* obj)
+    {
+        ALE::Push(L, obj->GetMapHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT));
+        return 1;
+    }
+
+    /**
+     * Returns the floor Z at the [WorldObject]'s current position and Z coordinate
+     *
+     * @return float floorZ
+     */
+    int GetFloorZ(lua_State* L, WorldObject* obj)
+    {
+        ALE::Push(L, obj->GetMapHeight(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ()));
+        return 1;
+    }
+
+    /**
+     * Returns the liquid data at the [WorldObject]'s position
+     *
+     * @return float liquidLevel
+     * @return float depthLevel
+     * @return uint32 liquidEntry
+     * @return uint32 liquidFlags
+     * @return uint32 liquidStatus
+     */
+    int GetLiquidData(lua_State* L, WorldObject* obj)
+    {
+        LiquidData const& liquidData = obj->GetLiquidData();
+        ALE::Push(L, liquidData.Level);
+        ALE::Push(L, liquidData.DepthLevel);
+        ALE::Push(L, liquidData.Entry);
+        ALE::Push(L, liquidData.Flags);
+        ALE::Push(L, liquidData.Status);
+        return 5;
+    }
 };
 #endif

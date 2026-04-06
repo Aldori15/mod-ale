@@ -2253,6 +2253,29 @@ namespace LuaPlayer
     }
 
     /**
+     * Rewards the [Player] with honor from killing a [Unit].
+     *
+     * Unlike [Player:ModifyHonorPoints], this processes a full honor kill:
+     * diminishing returns, kill tracking, combat log messages, and group sharing.
+     *
+     * @param [Unit] victim = nil : the killed unit, or nil for a flat honor reward
+     * @param uint32 groupSize = 1 : number of players in the group
+     * @param int32 honor = -1 : honor amount (-1 = calculate from victim)
+     * @param bool awardXP = true : whether to also award experience
+     * @return bool rewarded : true if honor was awarded
+     */
+    int RewardHonor(lua_State* L, Player* player)
+    {
+        Unit* victim = ALE::CHECKOBJ<Unit>(L, 2, false);
+        uint32 groupSize = ALE::CHECKVAL<uint32>(L, 3, 1);
+        int32 honor = ALE::CHECKVAL<int32>(L, 4, -1);
+        bool awardXP = ALE::CHECKVAL<bool>(L, 5, true);
+
+        ALE::Push(L, player->RewardHonor(victim, groupSize, honor, awardXP));
+        return 1;
+    }
+
+    /**
      * Saves the [Player] to the database
      */
     int SaveToDB(lua_State* /*L*/, Player* player)

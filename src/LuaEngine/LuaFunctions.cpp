@@ -809,6 +809,7 @@ ALERegister<Player> PlayerMethods[] =
     { "DurabilityRepair", &LuaPlayer::DurabilityRepair },
     { "ModifyHonorPoints", &LuaPlayer::ModifyHonorPoints },
     { "ModifyArenaPoints", &LuaPlayer::ModifyArenaPoints },
+    { "RewardHonor", &LuaPlayer::RewardHonor },
     { "LeaveBattleground", &LuaPlayer::LeaveBattleground },
     // {"BindToInstance", &LuaPlayer::BindToInstance},                                      // :BindToInstance() - UNDOCUMENTED - Binds the player to the current instance
     { "UnbindInstance", &LuaPlayer::UnbindInstance },

@@ -5154,5 +5154,28 @@ namespace LuaPlayer
         ALE::Push(L, player->GetGlobalCooldownMgr().HasGlobalCooldown(info));
         return 1;
     }
+
+    /**
+     * Returns a table of spell IDs the [Player] knows, containing only the highest rank of each spell.
+     *
+     * @return table spells : table of spell IDs (highest ranks only)
+     */
+    int GetSpellsMaxRank(lua_State* L, Player* player)
+    {
+        lua_newtable(L);
+        uint32 i = 1;
+        for (auto const& [spellId, playerSpell] : player->GetSpellMap())
+        {
+            if (playerSpell->State == PLAYERSPELL_REMOVED || !playerSpell->Active)
+                continue;
+            // exists next rank and player know it then next
+            uint32 nextRank = sSpellMgr->GetNextSpellInChain(spellId);
+            if (nextRank && player->HasSpell(nextRank))
+                continue;
+            lua_pushinteger(L, spellId);
+            lua_rawseti(L, -2, i++);
+        }
+        return 1;
+    }
 };
 #endif

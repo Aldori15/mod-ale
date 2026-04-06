@@ -582,6 +582,7 @@ ALERegister<Player> PlayerMethods[] =
     { "GetLastPetNumber", &LuaPlayer::GetLastPetNumber },
     { "GetLastPetSpell", &LuaPlayer::GetLastPetSpell },
     { "GetQuestSlotQuestId", &LuaPlayer::GetQuestSlotQuestId },
+    { "GetSpellsMaxRank", &LuaPlayer::GetSpellsMaxRank },
 
     // Setters
     { "SetTemporaryUnsummonedPetNumber", &LuaPlayer::SetTemporaryUnsummonedPetNumber },

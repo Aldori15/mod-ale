@@ -143,6 +143,7 @@ void ALE::OnAdd(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     START_HOOK(AUCTION_EVENT_ON_ADD);
+    Push(entry);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -165,6 +166,7 @@ void ALE::OnRemove(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     START_HOOK(AUCTION_EVENT_ON_REMOVE);
+    Push(entry);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -187,6 +189,7 @@ void ALE::OnSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     START_HOOK(AUCTION_EVENT_ON_SUCCESSFUL);
+    Push(entry);
     Push(entry->Id);
     Push(owner);
     Push(item);
@@ -209,6 +212,7 @@ void ALE::OnExpire(AuctionHouseObject* /*ah*/, AuctionEntry* entry)
         return;
 
     START_HOOK(AUCTION_EVENT_ON_EXPIRE);
+    Push(entry);
     Push(entry->Id);
     Push(owner);
     Push(item);

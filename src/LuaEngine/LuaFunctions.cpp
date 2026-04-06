@@ -45,6 +45,8 @@ extern "C"
 #include "PetMethods.h"
 #include "LootMethods.h"
 #include "TransportMethods.h"
+#include "AuctionEntryMethods.h"
+#include "AuctionHouseMethods.h"
 
 // DBCStores includes
 #include "GemPropertiesEntryMethods.h"
@@ -143,6 +145,7 @@ luaL_Reg GlobalMethods[] =
     { "GetGossipMenuOptionLocale", &LuaGlobalFunctions::GetGossipMenuOptionLocale },
     { "GetMapEntrance", &LuaGlobalFunctions::GetMapEntrance },
     { "GetSpellInfo", &LuaGlobalFunctions::GetSpellInfo },
+    { "GetAuctionHouseEntry", &LuaGlobalFunctions::GetAuctionHouseEntry },
 
     // Boolean
     { "IsCompatibilityMode", &LuaGlobalFunctions::IsCompatibilityMode },
@@ -1358,11 +1361,6 @@ ALERegister<Corpse> CorpseMethods[] =
     { NULL, NULL }
 };
 
-ALERegister<AuctionHouseEntry> AuctionMethods[] =
-{
-    { NULL, NULL }
-};
-
 ALERegister<BattleGround> BattleGroundMethods[] =
 {
     // Getters
@@ -1865,6 +1863,54 @@ ALERegister<Transport> TransportMethods[] =
     { NULL, NULL }
 };
 
+ALERegister<AuctionEntry> AuctionEntryMethods[] =
+{
+    // Getters
+    { "GetId", &LuaAuctionEntry::GetId },
+    { "GetHouseId", &LuaAuctionEntry::GetHouseId },
+    { "GetItemGuid", &LuaAuctionEntry::GetItemGuid },
+    { "GetItemEntry", &LuaAuctionEntry::GetItemEntry },
+    { "GetItemCount", &LuaAuctionEntry::GetItemCount },
+    { "GetOwnerGuid", &LuaAuctionEntry::GetOwnerGuid },
+    { "GetOwner", &LuaAuctionEntry::GetOwner },
+    { "GetStartBid", &LuaAuctionEntry::GetStartBid },
+    { "GetBid", &LuaAuctionEntry::GetBid },
+    { "GetBuyout", &LuaAuctionEntry::GetBuyout },
+    { "GetExpireTime", &LuaAuctionEntry::GetExpireTime },
+    { "GetTimeLeft", &LuaAuctionEntry::GetTimeLeft },
+    { "GetBidderGuid", &LuaAuctionEntry::GetBidderGuid },
+    { "GetBidder", &LuaAuctionEntry::GetBidder },
+    { "GetDeposit", &LuaAuctionEntry::GetDeposit },
+    { "GetAuctionCut", &LuaAuctionEntry::GetAuctionCut },
+    { "GetAuctionOutBid", &LuaAuctionEntry::GetAuctionOutBid },
+    { "GetItem", &LuaAuctionEntry::GetItem },
+    { "HasBidder", &LuaAuctionEntry::HasBidder },
+    { "IsExpired", &LuaAuctionEntry::IsExpired },
+    { "BuildMailSubject", &LuaAuctionEntry::BuildMailSubject },
+
+    { NULL, NULL }
+};
+
+ALERegister<AuctionHouseEntry> AuctionMethods[] =
+{
+    // Getters
+    { "GetDeposit", &LuaAuctionHouse::GetDeposit },
+    { "GetEntryFromFaction", &LuaAuctionHouse::GetEntryFromFaction },
+    { "GetEntryFromHouse", &LuaAuctionHouse::GetEntryFromHouse },
+
+    // Setters
+    { "AddAItem", &LuaAuctionHouse::AddAItem },
+    { "RemoveAItem", &LuaAuctionHouse::RemoveAItem },
+
+    // Other
+    { "AddAuction", &LuaAuctionHouse::AddAuction },
+    { "RemoveAuction", &LuaAuctionHouse::RemoveAuction },
+    { "CreateNewAuction", &LuaAuctionHouse::CreateNewAuction },
+    { "PlaceBid", &LuaAuctionHouse::PlaceBid },
+
+    { NULL, NULL }
+};
+
 // fix compile error about accessing vehicle destructor
 template<> int ALETemplate<Vehicle>::CollectGarbage(lua_State* L)
 {
@@ -1997,6 +2043,9 @@ void RegisterFunctions(ALE* E)
 
     ALETemplate<AuctionHouseEntry>::Register(E, "AuctionHouseEntry");
     ALETemplate<AuctionHouseEntry>::SetMethods(E, AuctionMethods);
+
+    ALETemplate<AuctionEntry>::Register(E, "AuctionEntry");
+    ALETemplate<AuctionEntry>::SetMethods(E, AuctionEntryMethods);
 
     ALETemplate<BattleGround>::Register(E, "BattleGround");
     ALETemplate<BattleGround>::SetMethods(E, BattleGroundMethods);

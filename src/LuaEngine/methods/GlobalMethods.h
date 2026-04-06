@@ -687,10 +687,10 @@ namespace LuaGlobalFunctions
      *         WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, zoneId, state, grade)
      *
      *         // Auction house
-     *         AUCTION_EVENT_ON_ADD                    =     26,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *         AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *         AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-     *         AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+     *         AUCTION_EVENT_ON_ADD                    =     26,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+     *         AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+     *         AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+     *         AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
      *
      *         // AddOns
      *         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel. Can return false
@@ -3567,6 +3567,66 @@ namespace LuaGlobalFunctions
         }
 
         return luaL_error(L, "Invalid DBC name: %s", dbcName);
+    }
+
+    /**
+     * Returns an AuctionHouseEntry by house ID.
+     * @param uint8 houseId : 2=Alliance, 6=Horde, 7=Neutral
+     * @return AuctionHouseEntry auctionHouseEntry or nil
+     */
+    int GetAuctionHouseEntry(lua_State* L)
+    {
+        uint8 houseId = ALE::CHECKVAL<uint8>(L, 1);
+        ALE::Push(L, eAuctionMgr->GetAuctionHouseEntryFromHouse(static_cast<AuctionHouseId>(houseId)));
+        return 1;
+    }
+
+    /**
+     * Returns an AuctionEntry by auction ID
+     * @param uint32 auctionId
+     * @param uint8 houseId : optional, 2=Alliance, 6=Horde, 7=Neutral. If not provided, searches all houses.
+     * @return AuctionEntry auction or nil
+     */
+    int GetAuctionById(lua_State* L)
+    {
+        uint32 auctionId = ALE::CHECKVAL<uint32>(L, 1);
+        
+        if (lua_gettop(L) >= 2)
+        {
+            uint8 houseId = ALE::CHECKVAL<uint8>(L, 2);
+            AuctionHouseObject* ah = eAuctionMgr->GetAuctionsMapByHouseId(static_cast<AuctionHouseId>(houseId));
+            if (ah)
+            {
+                ALE::Push(L, ah->GetAuction(auctionId));
+                return 1;
+            }
+            ALE::Push(L);
+            return 1;
+        }
+        
+        // Поиск по всем аукционам
+        AuctionEntry* entry = nullptr;
+        
+        // Alliance (2)
+        AuctionHouseObject* ah = eAuctionMgr->GetAuctionsMapByHouseId(AuctionHouseId::Alliance);
+        if (ah) entry = ah->GetAuction(auctionId);
+        
+        // Horde (6)
+        if (!entry)
+        {
+            ah = eAuctionMgr->GetAuctionsMapByHouseId(AuctionHouseId::Horde);
+            if (ah) entry = ah->GetAuction(auctionId);
+        }
+        
+        // Neutral (7)
+        if (!entry)
+        {
+            ah = eAuctionMgr->GetAuctionsMapByHouseId(AuctionHouseId::Neutral);
+            if (ah) entry = ah->GetAuction(auctionId);
+        }
+        
+        ALE::Push(L, entry);
+        return 1;
     }
 }
 #endif

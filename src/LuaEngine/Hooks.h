@@ -141,10 +141,10 @@ namespace Hooks
         WEATHER_EVENT_ON_CHANGE                 =     25,       // (event, zoneId, state, grade)
 
         // Auction house
-        AUCTION_EVENT_ON_ADD                    =     26,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-        AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-        AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
-        AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+        AUCTION_EVENT_ON_ADD                    =     26,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+        AUCTION_EVENT_ON_REMOVE                 =     27,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+        AUCTION_EVENT_ON_SUCCESSFUL             =     28,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
+        AUCTION_EVENT_ON_EXPIRE                 =     29,       // (event, auctionEntry, auctionId, owner, item, expireTime, buyout, startBid, currentBid, bidderGUIDLow)
 
         // AddOns
         ADDON_EVENT_ON_MESSAGE                  =     30,       // (event, sender, type, prefix, msg, target) - target can be nil/whisper_target/guild/group/channel. Can return false

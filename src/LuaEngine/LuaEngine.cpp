@@ -1241,6 +1241,21 @@ template<> ALEObject* ALE::CHECKOBJ<ALEObject>(lua_State* luastate, int narg, bo
     return CHECKTYPE(luastate, narg, NULL, error);
 }
 
+template<> Player* ALE::CHECKVAL<Player*>(lua_State* L, int n) 
+{ 
+    return ALE::CHECKOBJ<Player>(L, n); 
+}
+
+template<> Item* ALE::CHECKVAL<Item*>(lua_State* L, int n) 
+{ 
+    return ALE::CHECKOBJ<Item>(L, n); 
+}
+
+template <> AuctionEntry* ALE::CHECKVAL<AuctionEntry*>(lua_State* L, int n)
+{
+    return ALE::CHECKOBJ<AuctionEntry>(L, n);
+}
+
 ALEObject* ALE::CHECKTYPE(lua_State* luastate, int narg, const char* tname, bool error)
 {
     if (lua_islightuserdata(luastate, narg))

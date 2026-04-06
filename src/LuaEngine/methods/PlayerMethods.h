@@ -3274,12 +3274,14 @@ namespace LuaPlayer
      *
      * @param uint32 entry : entry of the item to add
      * @param uint32 itemCount = 1 : amount of the item to add
+     * @param bool sendChatMessage = true : whether to display the "You receive item" message in chat
      * @return [Item] item : the item that was added or nil
      */
     int AddItem(lua_State* L, Player* player)
     {
         uint32 itemId = ALE::CHECKVAL<uint32>(L, 2);
         uint32 itemCount = ALE::CHECKVAL<uint32>(L, 3, 1);
+        bool sendChatMessage = ALE::CHECKVAL<bool>(L, 4, true);
 
         uint32 noSpaceForCount = 0;
         ItemPosCountVec dest;
@@ -3292,7 +3294,7 @@ namespace LuaPlayer
 
         Item* item = player->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
         if (item)
-            player->SendNewItem(item, itemCount, true, false);
+            player->SendNewItem(item, itemCount, true, false, false, sendChatMessage);
         ALE::Push(L, item);
 
         return 1;

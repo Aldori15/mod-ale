@@ -48,6 +48,11 @@ extern "C"
 #include "AuctionEntryMethods.h"
 #include "AuctionHouseMethods.h"
 
+//Playerbots Module
+#if defined(MOD_PLAYERBOTS)
+    #include "PlayerBotMethods.h"
+#endif
+
 // DBCStores includes
 #include "GemPropertiesEntryMethods.h"
 #include "SpellEntryMethods.h"
@@ -1914,6 +1919,33 @@ ALERegister<AuctionHouseEntry> AuctionMethods[] =
     { NULL, NULL }
 };
 
+#if defined(MOD_PLAYERBOTS)
+luaL_Reg PlayerBotMethods[] =
+{
+    // Getters
+    { "GetBotSessionCount", &LuaGlobalBot::GetBotSessionCount },
+    { "GetAccountIdByUsername", &LuaGlobalBot::GetAccountIdByUsername },
+    { "GetAccountCharCount", &LuaGlobalBot::GetAccountCharCount },
+    { "GetCharGuidByName", &LuaGlobalBot::GetCharGuidByName },
+    { "GetCharAccountIdByGuid", &LuaGlobalBot::GetCharAccountIdByGuid },
+    { "GetCharNameByGuid", &LuaGlobalBot::GetCharNameByGuid },
+
+    // Other
+    { "CreateBotSession", &LuaGlobalBot::CreateBotSession },
+    { "CreateBotPlayer", &LuaGlobalBot::CreateBotPlayer },
+    { "LoginBotByGuid", &LuaGlobalBot::LoginBotByGuid },
+    { "LogoutBotByGuid", &LuaGlobalBot::LogoutBotByGuid },
+    { "FindBotPlayer", &LuaGlobalBot::FindBotPlayer },
+    { "CreateBotAccount", &LuaGlobalBot::CreateBotAccount },
+    { "DeleteBotAccount", &LuaGlobalBot::DeleteBotAccount },
+    { "PlayerbotsDBQuery", &LuaGlobalBot::PlayerbotsDBQuery },
+    { "PlayerbotsDBQueryAsync", &LuaGlobalBot::PlayerbotsDBQueryAsync },
+    { "PlayerbotsDBExecute", &LuaGlobalBot::PlayerbotsDBExecute },
+
+    { NULL, NULL }
+};
+#endif
+
 // fix compile error about accessing vehicle destructor
 template<> int ALETemplate<Vehicle>::CollectGarbage(lua_State* L)
 {
@@ -1975,6 +2007,9 @@ template<> int ALETemplate<long long>::ToString(lua_State* L)
 void RegisterFunctions(ALE* E)
 {
     ALEGlobal::SetMethods(E, GlobalMethods);
+#if defined(MOD_PLAYERBOTS)
+    ALEGlobal::SetMethods(E, PlayerBotMethods);
+#endif
 
     ALETemplate<Object>::Register(E, "Object");
     ALETemplate<Object>::SetMethods(E, ObjectMethods);

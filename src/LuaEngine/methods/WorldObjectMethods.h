@@ -761,11 +761,9 @@ namespace LuaWorldObject
         uint32 min, max;
         if (lua_istable(L, 3))
         {
-            ALE::Push(L, 1);
-            lua_gettable(L, 3);
+            lua_rawgeti(L, 3, 1); // Use lua_rawgeti instead of lua_gettable for direct index access
             min = ALE::CHECKVAL<uint32>(L, -1);
-            ALE::Push(L, 2);
-            lua_gettable(L, 3);
+            lua_rawgeti(L, 3, 2); // Use lua_rawgeti for second value
             max = ALE::CHECKVAL<uint32>(L, -1);
             lua_pop(L, 2);
         }
@@ -782,8 +780,9 @@ namespace LuaWorldObject
         {
             obj->ALEEvents->AddEvent(functionRef, min, max, repeats);
             ALE::Push(L, functionRef);
+            return 1;
         }
-        return 1;
+        return 0; // No value left on stack if reference is invalid
     }
 
     /**

@@ -616,10 +616,15 @@ namespace LuaGlobalFunctions
         lua_pushvalue(L, 2);
         int functionRef = luaL_ref(L, LUA_REGISTRYINDEX);
         if (functionRef >= 0)
+        {
+            // Pass through the result (callback) from Register
             return ALE::GetALE(L)->Register(L, regtype, 0, ObjectGuid(), 0, ev, functionRef, shots);
+        }
         else
+        {
             luaL_argerror(L, 2, "unable to make a ref to function");
-        return 0;
+            return 0; // This never executes due to luaL_argerror, but keeps compiler happy
+        }
     }
 
     static int RegisterUniqueHelper(lua_State* L, int regtype)
@@ -1718,11 +1723,9 @@ namespace LuaGlobalFunctions
         uint32 min, max;
         if (lua_istable(L, 2))
         {
-            ALE::Push(L, 1);
-            lua_gettable(L, 2);
+            lua_rawgeti(L, 2, 1); // Get first element from table at index 1
             min = ALE::CHECKVAL<uint32>(L, -1);
-            ALE::Push(L, 2);
-            lua_gettable(L, 2);
+            lua_rawgeti(L, 2, 2); // Get second element from table at index 2
             max = ALE::CHECKVAL<uint32>(L, -1);
             lua_pop(L, 2);
         }
@@ -1739,8 +1742,10 @@ namespace LuaGlobalFunctions
         {
             ALE::GetALE(L)->eventMgr->globalProcessor->AddEvent(functionRef, min, max, repeats);
             ALE::Push(L, functionRef);
+            return 1;
         }
-        return 1;
+
+        return 0; // No values left on stack
     }
 
     /**

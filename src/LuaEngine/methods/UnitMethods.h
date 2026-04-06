@@ -2750,5 +2750,210 @@ namespace LuaUnit
         ALE::Push(L, unit->GetThreatMgr().GetThreat(target));
         return 1;
     }
+
+    /**
+     * Returns all movement flags of a [Unit] as a bitmask.
+     *
+     * Flags:
+     * FORWARD              = 0x00000001
+     * BACKWARD             = 0x00000002
+     * STRAFE_LEFT          = 0x00000004
+     * STRAFE_RIGHT         = 0x00000008
+     * LEFT                 = 0x00000010
+     * RIGHT                = 0x00000020
+     * PITCH_UP             = 0x00000040
+     * PITCH_DOWN           = 0x00000080
+     * WALKING              = 0x00000100
+     * ONTRANSPORT          = 0x00000200
+     * DISABLE_GRAVITY      = 0x00000400
+     * ROOT                 = 0x00000800
+     * FALLING              = 0x00001000
+     * FALLING_FAR          = 0x00002000
+     * PENDING_STOP         = 0x00004000
+     * PENDING_STRAFE_STOP  = 0x00008000
+     * PENDING_FORWARD      = 0x00010000
+     * PENDING_BACKWARD     = 0x00020000
+     * PENDING_STRAFE_LEFT  = 0x00040000
+     * PENDING_STRAFE_RIGHT = 0x00080000
+     * PENDING_ROOT         = 0x00100000
+     * SWIMMING             = 0x00200000
+     * ASCENDING            = 0x00400000
+     * DESCENDING           = 0x00800000
+     * CAN_FLY              = 0x01000000
+     * FLYING               = 0x02000000
+     * SPLINE_ELEVATION     = 0x04000000
+     * SPLINE_ENABLED       = 0x08000000
+     * WATERWALKING         = 0x10000000
+     * FALLING_SLOW         = 0x20000000
+     * HOVER                = 0x40000000
+     *
+     * @return uint32 flags
+     */
+    int GetMovementFlags(lua_State* L, Unit* unit)
+    {
+        ALE::Push(L, unit->GetUnitMovementFlags());
+        return 1;
+    }
+
+    /**
+     * Returns true if the [Unit] has the specified movement flag set.
+     *
+     * Flags:
+     * FORWARD              = 0x00000001
+     * BACKWARD             = 0x00000002
+     * STRAFE_LEFT          = 0x00000004
+     * STRAFE_RIGHT         = 0x00000008
+     * LEFT                 = 0x00000010
+     * RIGHT                = 0x00000020
+     * PITCH_UP             = 0x00000040
+     * PITCH_DOWN           = 0x00000080
+     * WALKING              = 0x00000100
+     * ONTRANSPORT          = 0x00000200
+     * DISABLE_GRAVITY      = 0x00000400
+     * ROOT                 = 0x00000800
+     * FALLING              = 0x00001000
+     * FALLING_FAR          = 0x00002000
+     * PENDING_STOP         = 0x00004000
+     * PENDING_STRAFE_STOP  = 0x00008000
+     * PENDING_FORWARD      = 0x00010000
+     * PENDING_BACKWARD     = 0x00020000
+     * PENDING_STRAFE_LEFT  = 0x00040000
+     * PENDING_STRAFE_RIGHT = 0x00080000
+     * PENDING_ROOT         = 0x00100000
+     * SWIMMING             = 0x00200000
+     * ASCENDING            = 0x00400000
+     * DESCENDING           = 0x00800000
+     * CAN_FLY              = 0x01000000
+     * FLYING               = 0x02000000
+     * SPLINE_ELEVATION     = 0x04000000
+     * SPLINE_ENABLED       = 0x08000000
+     * WATERWALKING         = 0x10000000
+     * FALLING_SLOW         = 0x20000000
+     * HOVER                = 0x40000000
+     *
+     * @param uint32 flag
+     * @return bool hasFlag
+     */
+    int HasMovementFlag(lua_State* L, Unit* unit)
+    {
+        uint32 flag = ALE::CHECKVAL<uint32>(L, 2);
+        ALE::Push(L, unit->HasUnitMovementFlag((MovementFlags)flag));
+        return 1;
+    }
+
+    /**
+     * Adds a movement flag to the [Unit]. Does not send an update to clients — call SendMovementFlagUpdate() if needed.
+     *
+     * Flags:
+     * FORWARD              = 0x00000001
+     * BACKWARD             = 0x00000002
+     * STRAFE_LEFT          = 0x00000004
+     * STRAFE_RIGHT         = 0x00000008
+     * LEFT                 = 0x00000010
+     * RIGHT                = 0x00000020
+     * PITCH_UP             = 0x00000040
+     * PITCH_DOWN           = 0x00000080
+     * WALKING              = 0x00000100
+     * ONTRANSPORT          = 0x00000200
+     * DISABLE_GRAVITY      = 0x00000400
+     * ROOT                 = 0x00000800
+     * FALLING              = 0x00001000
+     * FALLING_FAR          = 0x00002000
+     * PENDING_STOP         = 0x00004000
+     * PENDING_STRAFE_STOP  = 0x00008000
+     * PENDING_FORWARD      = 0x00010000
+     * PENDING_BACKWARD     = 0x00020000
+     * PENDING_STRAFE_LEFT  = 0x00040000
+     * PENDING_STRAFE_RIGHT = 0x00080000
+     * PENDING_ROOT         = 0x00100000
+     * SWIMMING             = 0x00200000
+     * ASCENDING            = 0x00400000
+     * DESCENDING           = 0x00800000
+     * CAN_FLY              = 0x01000000
+     * FLYING               = 0x02000000
+     * SPLINE_ELEVATION     = 0x04000000
+     * SPLINE_ENABLED       = 0x08000000
+     * WATERWALKING         = 0x10000000
+     * FALLING_SLOW         = 0x20000000
+     * HOVER                = 0x40000000
+     *
+     * @param uint32 flag
+     */
+    int AddMovementFlag(lua_State* L, Unit* unit)
+    {
+        uint32 flag = ALE::CHECKVAL<uint32>(L, 2);
+        unit->AddUnitMovementFlag((MovementFlags)flag);
+        return 0;
+    }
+
+    /**
+     * Removes a movement flag from the [Unit]. Does not send an update to clients — call SendMovementFlagUpdate() if needed.
+     *
+     * Flags:
+     * FORWARD              = 0x00000001
+     * BACKWARD             = 0x00000002
+     * STRAFE_LEFT          = 0x00000004
+     * STRAFE_RIGHT         = 0x00000008
+     * LEFT                 = 0x00000010
+     * RIGHT                = 0x00000020
+     * PITCH_UP             = 0x00000040
+     * PITCH_DOWN           = 0x00000080
+     * WALKING              = 0x00000100
+     * ONTRANSPORT          = 0x00000200
+     * DISABLE_GRAVITY      = 0x00000400
+     * ROOT                 = 0x00000800
+     * FALLING              = 0x00001000
+     * FALLING_FAR          = 0x00002000
+     * PENDING_STOP         = 0x00004000
+     * PENDING_STRAFE_STOP  = 0x00008000
+     * PENDING_FORWARD      = 0x00010000
+     * PENDING_BACKWARD     = 0x00020000
+     * PENDING_STRAFE_LEFT  = 0x00040000
+     * PENDING_STRAFE_RIGHT = 0x00080000
+     * PENDING_ROOT         = 0x00100000
+     * SWIMMING             = 0x00200000
+     * ASCENDING            = 0x00400000
+     * DESCENDING           = 0x00800000
+     * CAN_FLY              = 0x01000000
+     * FLYING               = 0x02000000
+     * SPLINE_ELEVATION     = 0x04000000
+     * SPLINE_ENABLED       = 0x08000000
+     * WATERWALKING         = 0x10000000
+     * FALLING_SLOW         = 0x20000000
+     * HOVER                = 0x40000000
+     *
+     * @param uint32 flag
+     */
+    int RemoveMovementFlag(lua_State* L, Unit* unit)
+    {
+        uint32 flag = ALE::CHECKVAL<uint32>(L, 2);
+        unit->RemoveUnitMovementFlag((MovementFlags)flag);
+        return 0;
+    }
+
+    /**
+     * Sends a movement flag update to clients in range of the [Unit].
+     *
+     * Call this after using [Unit:AddMovementFlag] or [Unit:RemoveMovementFlag] to sync clients.
+     *
+     * @param bool self = false : whether to also send the update to the [Unit] itself
+     */
+    int SendMovementFlagUpdate(lua_State* L, Unit* unit)
+    {
+        bool self = ALE::CHECKVAL<bool>(L, 2, false);
+        unit->SendMovementFlagUpdate(self);
+        return 0;
+    }
+
+    /**
+     * Returns true if the [Unit] is currently on a transport.
+     *
+     * @return bool onTransport
+     */
+    int IsOnTransport(lua_State* L, Unit* unit)
+    {
+        ALE::Push(L, unit->HasUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT));
+        return 1;
+    }
 };
 #endif

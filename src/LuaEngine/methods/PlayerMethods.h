@@ -2891,11 +2891,19 @@ namespace LuaPlayer
         if (!quest)
             return 0;
 
-        // check item starting quest (it can work incorrectly if added without item in inventory)
-        ItemTemplateContainer const* itc = sObjectMgr->GetItemTemplateStore();
-        ItemTemplateContainer::const_iterator result = find_if(itc->begin(), itc->end(), Finder<uint32, ItemTemplate>(entry, &ItemTemplate::StartQuest));
+        // Cache item-started quest ids so AddQuest does not rescan the full item template store.
+        static std::unordered_set<uint32> itemStartQuests = [] {
+            std::unordered_set<uint32> questIds;
+            auto itemTemplates = sObjectMgr->GetItemTemplateStore();
 
-        if (result != itc->end())
+            for (auto const& pair : *itemTemplates)
+                if (pair.second.StartQuest)
+                    questIds.insert(pair.second.StartQuest);
+
+            return questIds;
+        }();
+
+        if (itemStartQuests.count(entry))
             return 0;
 
         // ok, normal (creature/GO starting) quest

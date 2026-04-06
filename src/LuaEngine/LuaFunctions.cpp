@@ -173,6 +173,11 @@ luaL_Reg GlobalMethods[] =
     { "AuthDBQuery", &LuaGlobalFunctions::AuthDBQuery },
     { "AuthDBQueryAsync", &LuaGlobalFunctions::AuthDBQueryAsync },
     { "AuthDBExecute", &LuaGlobalFunctions::AuthDBExecute },
+#if defined(MOD_PLAYERBOTS)
+    { "PlayerbotsDBQuery", &LuaGlobalFunctions::PlayerbotsDBQuery },
+    { "PlayerbotsDBQueryAsync", &LuaGlobalFunctions::PlayerbotsDBQueryAsync },
+    { "PlayerbotsDBExecute", &LuaGlobalFunctions::PlayerbotsDBExecute },
+#endif
     { "CreateLuaEvent", &LuaGlobalFunctions::CreateLuaEvent },
     { "RemoveEventById", &LuaGlobalFunctions::RemoveEventById },
     { "RemoveEvents", &LuaGlobalFunctions::RemoveEvents },
@@ -1938,9 +1943,6 @@ luaL_Reg PlayerBotMethods[] =
     { "FindBotPlayer", &LuaGlobalBot::FindBotPlayer },
     { "CreateBotAccount", &LuaGlobalBot::CreateBotAccount },
     { "DeleteBotAccount", &LuaGlobalBot::DeleteBotAccount },
-    { "PlayerbotsDBQuery", &LuaGlobalBot::PlayerbotsDBQuery },
-    { "PlayerbotsDBQueryAsync", &LuaGlobalBot::PlayerbotsDBQueryAsync },
-    { "PlayerbotsDBExecute", &LuaGlobalBot::PlayerbotsDBExecute },
 
     { NULL, NULL }
 };

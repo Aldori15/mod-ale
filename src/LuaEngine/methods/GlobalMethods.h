@@ -1699,6 +1699,90 @@ namespace LuaGlobalFunctions
         return 0;
     }
 
+#if defined(MOD_PLAYERBOTS)
+    /**
+     * Executes a SQL query on the playerbots database and returns an [ALEQuery].
+     *
+     * The query is always executed synchronously
+     *   (i.e. execution halts until the query has finished and then results are returned).
+     * If you need to execute the query asynchronously, use [Global:PlayerbotsDBQueryAsync] instead.
+     *
+     *     local Q = PlayerbotsDBQuery("SELECT id, name, x, y, z FROM playerbots_travelnode WHERE map_id = 0 LIMIT 10")
+     *     if Q then
+     *         repeat
+     *             local id, name = Q:GetUInt32(0), Q:GetString(1)
+     *             print(id, name)
+     *         until not Q:NextRow()
+     *     end
+     *
+     * @param string sql : query to execute
+     * @return [ALEQuery] results or nil if no rows found
+     */
+    int PlayerbotsDBQuery(lua_State* L)
+    {
+        const char* query = ALE::CHECKVAL<const char*>(L, 1);
+
+        int numArgs = lua_gettop(L);
+        if (numArgs > 1)
+            query = ALE::FormatQuery(L, query).c_str();
+
+        ALEQuery result = PlayerbotsDatabase.Query(query);
+        if (result)
+            ALE::Push(L, new ALEQuery(result));
+        else
+            ALE::Push(L);
+        return 1;
+    }
+
+    /**
+     * Executes an asynchronous SQL query on the playerbots database and passes an [ALEQuery] to a callback function.
+     *
+     * The query is executed asynchronously
+     *   (i.e. the server keeps running while the query is executed in parallel, and results are passed to a callback function).
+     * If you need to execute the query synchronously, use [Global:PlayerbotsDBQuery] instead.
+     *
+     *     PlayerbotsDBQueryAsync("SELECT id, x, y, z FROM playerbots_travelnode WHERE map_id = 0", function(Q)
+     *         if Q then
+     *             repeat
+     *                 print(Q:GetUInt32(0), Q:GetFloat(1), Q:GetFloat(2), Q:GetFloat(3))
+     *             until not Q:NextRow()
+     *         end
+     *     end)
+     *
+     * @param string sql : query to execute
+     * @param function callback : function that will be called when the results are available
+     */
+    int PlayerbotsDBQueryAsync(lua_State* L)
+    {
+        return DBQueryAsync(L, PlayerbotsDatabase);
+    }
+
+    /**
+     * Executes a SQL query on the playerbots database.
+     *
+     * The query may be executed *asynchronously* (at a later, unpredictable time).
+     * If you need to execute the query synchronously, use [Global:PlayerbotsDBQuery] instead.
+     *
+     * Any results produced are ignored.
+     * If you need results from the query, use [Global:PlayerbotsDBQuery] or [Global:PlayerbotsDBQueryAsync] instead.
+     *
+     *     PlayerbotsDBExecute("DELETE FROM playerbots_random_bots WHERE owner = 0")
+     *
+     * @param string sql : query to execute
+     */
+    int PlayerbotsDBExecute(lua_State* L)
+    {
+        const char* query = ALE::CHECKVAL<const char*>(L, 1);
+
+        int numArgs = lua_gettop(L);
+        if (numArgs > 1)
+            query = ALE::FormatQuery(L, query).c_str();
+
+        PlayerbotsDatabase.Execute(query);
+        return 0;
+    }
+#endif
+
     /**
      * Registers a global timed event.
      *

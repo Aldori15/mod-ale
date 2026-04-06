@@ -450,7 +450,7 @@
                 shown = [];
 
                 results.forEach(function(item) {
-                    var name, type;
+                    var name, type, displayPath, methodSeparator;
 
                     if (shown.indexOf(item) !== -1) {
                         return;
@@ -459,11 +459,13 @@
                     shown.push(item);
                     name = item.name;
                     type = itemTypes[item.ty];
+                    displayPath = item.path === 'PlayerBot' ? 'PlayerBots' : item.path;
+                    methodSeparator = item.path === 'PlayerBot' ? '.' : '::';
 
                     output += '<tr class="' + type + ' result"><td>';
 
                     if (type === 'mod') {
-                        output += item.path +
+                        output += displayPath +
                             '::<a href="' + rootPath +
                             item.path.replace(/::/g, '/') + // '/' +
                             name + '/index.html" class="' +
@@ -477,7 +479,7 @@
                     } else if (item.parent !== undefined) {
                         var myparent = item.parent;
                         var anchor = '#' + type + '.' + name;
-                        output += item.path + '::' + myparent.name +
+                        output += displayPath + methodSeparator + myparent.name +
                             '::<a href="' + rootPath +
                             item.path.replace(/::/g, '/') +
                             '/' + myparent.name +
@@ -485,8 +487,8 @@
                             '" class="' + type +
                             '">' + name + '</a>';
                     } else {
-                        output += item.path +
-                            '::<a href="' + rootPath +
+                        output += displayPath +
+                            methodSeparator + '<a href="' + rootPath +
                             item.path.replace(/::/g, '/') +
                             '/' + name +
                             '.html" class="' + type +

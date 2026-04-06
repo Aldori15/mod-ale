@@ -2008,7 +2008,7 @@ void RegisterFunctions(ALE* E)
 {
     ALEGlobal::SetMethods(E, GlobalMethods);
 #if defined(MOD_PLAYERBOTS)
-    ALEGlobal::SetMethods(E, PlayerBotMethods);
+    ALEGlobal::SetTableMethods(E, "Playerbot", PlayerBotMethods);
 #endif
 
     ALETemplate<Object>::Register(E, "Object");

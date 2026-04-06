@@ -53,6 +53,33 @@ public:
 
         lua_remove(E->L, -1);
     }
+
+    static void SetTableMethods(ALE* E, const char* tableName, luaL_Reg* methodTable)
+    {
+        ASSERT(E);
+        ASSERT(tableName);
+        ASSERT(methodTable);
+
+        lua_getglobal(E->L, tableName);
+
+        if (lua_isnil(E->L, -1))
+        {
+            lua_pop(E->L, 1);
+            lua_newtable(E->L);
+            lua_pushvalue(E->L, -1);
+            lua_setglobal(E->L, tableName);
+        }
+
+        for (; methodTable && methodTable->name && methodTable->func; ++methodTable)
+        {
+            lua_pushstring(E->L, methodTable->name);
+            lua_pushlightuserdata(E->L, (void*)methodTable);
+            lua_pushcclosure(E->L, thunk, 1);
+            lua_rawset(E->L, -3);
+        }
+
+        lua_pop(E->L, 1);
+    }
 };
 
 class ALEObject

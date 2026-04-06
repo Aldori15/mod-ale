@@ -2,17 +2,17 @@
 
 
 {% block title -%}
-    {{ current_class.name }} - {{ super() }}
+    {{ 'PlayerBots' if current_class.name == 'PlayerBot' else current_class.name }} - {{ super() }}
 {%- endblock %}
 
 
 {% block description -%}
-    API documentation for the {{ current_class.name }} class in the ALE engine.
+    API documentation for the {{ 'PlayerBots' if current_class.name == 'PlayerBot' else current_class.name }} class in the ALE engine.
 {%- endblock %}
 
 
 {% block document_title -%}
-    Class <a class="mod" href="">{{ current_class.name }}</a>
+    Class <a class="mod" href="">{{ 'PlayerBots' if current_class.name == 'PlayerBot' else current_class.name }}</a>
 {%- endblock %}
 
 
@@ -22,6 +22,10 @@
 
 {% block content %}
     {{ current_class.description|parse_links }}
+
+    {% if current_class.name == 'PlayerBot' %}
+    <p><strong>Syntax:</strong> <code>Playerbot.MethodName(...)</code></p>
+    {% endif %}
 
     <h2 id='methods' class='section-header'><a href="#methods">Methods</a></h2>
     <table>

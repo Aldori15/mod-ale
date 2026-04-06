@@ -2,20 +2,28 @@
 
 
 {% block title -%}
+    {% if current_class.name == 'PlayerBot' %}
+    Playerbot.{{ current_method.name }} - ALE
+    {% else %}
     {{ current_class.name }}:{{ current_method.name }} - ALE
+    {% endif %}
 {%- endblock %}
 
 
 {% block description -%}
+    {% if current_class.name == 'PlayerBot' %}
+    API documentation for the Playerbot.{{ current_method.name }} function in the ALE engine.
+    {% else %}
     API documentation for the {{ current_class.name }}:{{ current_method.name }} method in the ALE engine.
+    {% endif %}
 {%- endblock %}
 
 
 {% block document_title -%}
     Method
     <a class="mod" href="{{ root(current_class.name + '/index.html') }}">
-        {{- current_class.name -}}
-    </a>:<a class="fn" href="{{ root(current_class.name + '/' + current_method.name + '.html') }}">
+        {{- 'PlayerBots' if current_class.name == 'PlayerBot' else current_class.name -}}
+    </a>{{ '.' if current_class.name == 'PlayerBot' else ':' }}<a class="fn" href="{{ root(current_class.name + '/' + current_method.name + '.html') }}">
         {{- current_method.name -}}
     </a>
 {%- endblock %}

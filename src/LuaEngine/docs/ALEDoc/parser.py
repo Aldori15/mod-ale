@@ -153,6 +153,11 @@ class ClassParser(object):
         # Reset the parser's state machine.
         self.reset()
 
+    def get_display_class_name(self):
+        if self.class_name == 'PlayerBot':
+            return 'Playerbot'
+        return self.class_name
+
     def reset(self):
         # What the last handled regex was, to determine what the next should be.
         self.last_regex = None
@@ -184,16 +189,20 @@ class ClassParser(object):
         return_values, parameters = match.group(1), match.group(2)
         parameters = ' '+parameters+' ' if parameters else ''
         return_values = return_values + '= ' if return_values else ''
+        display_class_name = self.get_display_class_name()
 
         if self.class_name == 'Global':
             prototype = '{0}{{0}}({1})'.format(return_values, parameters)
+        elif self.class_name == 'PlayerBot':
+            prototype = '{0}{1}.{{0}}({2})'.format(return_values, display_class_name, parameters)
         else:
-            prototype = '{0}{1}:{{0}}({2})'.format(return_values, self.class_name, parameters)
+            prototype = '{0}{1}:{{0}}({2})'.format(return_values, display_class_name, parameters)
 
         self.prototypes.append(prototype)
 
     def handle_end(self, match):
         self.method_name = match.group(1)
+        display_class_name = self.get_display_class_name()
 
         def make_prototype(parameters):
             if parameters != '':
@@ -205,12 +214,18 @@ class ClassParser(object):
                     prototype = '{0} = {1}({2})'.format(return_values, self.method_name, parameters)
                 else:
                     prototype = '{0}({1})'.format(self.method_name, parameters)
+            elif self.class_name == 'PlayerBot':
+                if self.returned:
+                    return_values = ', '.join([param.name for param in self.returned])
+                    prototype = '{0} = {1}.{2}({3})'.format(return_values, display_class_name, self.method_name, parameters)
+                else:
+                    prototype = '{0}.{1}({2})'.format(display_class_name, self.method_name, parameters)
             else:
                 if self.returned:
                     return_values = ', '.join([param.name for param in self.returned])
-                    prototype = '{0} = {1}:{2}({3})'.format(return_values, self.class_name, self.method_name, parameters)
+                    prototype = '{0} = {1}:{2}({3})'.format(return_values, display_class_name, self.method_name, parameters)
                 else:
-                    prototype = '{0}:{1}({2})'.format(self.class_name, self.method_name, parameters)
+                    prototype = '{0}:{1}({2})'.format(display_class_name, self.method_name, parameters)
 
             return prototype
 

@@ -986,5 +986,16 @@ namespace LuaSpellInfo
         ALE::Push(L, spell_info->Effects[effectIndex].MiscValueB);
         return 1;
     }
+
+    /**
+     * Returns the ID of the [SpellInfo].
+     *
+     * @return uint32 id
+     */
+    int GetId(lua_State* L, SpellInfo* spellInfo)
+    {
+        ALE::Push(L, spellInfo->Id);
+        return 1;
+    }
 }
 #endif

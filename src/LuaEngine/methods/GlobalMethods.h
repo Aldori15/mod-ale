@@ -1757,7 +1757,7 @@ namespace LuaGlobalFunctions
     int RemoveEventById(lua_State* L)
     {
         int eventId = ALE::CHECKVAL<int>(L, 1);
-        bool all_Events = ALE::CHECKVAL<bool>(L, 1, false);
+        bool all_Events = ALE::CHECKVAL<bool>(L, 2, false);
 
         // not thread safe
         if (all_Events)

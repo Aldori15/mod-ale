@@ -2695,10 +2695,10 @@ namespace LuaUnit
     return 1;
 
     if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
-    ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
+    ((Guardian*)summon)->InitStatsForLevel(unit->GetLevel());
 
     if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
-    summon->setFaction(unit->getFaction());
+    summon->SetFaction(unit->GetFaction());
     if (summon->GetEntry() == 27893)
     {
     if (uint32 weapon = unit->GetUInt32Value(PLAYER_VISIBLE_ITEM_16_ENTRYID))

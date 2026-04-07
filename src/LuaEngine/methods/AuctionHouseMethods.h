@@ -16,6 +16,55 @@
 namespace LuaAuctionHouse
 {
     /**
+     * Returns the auction house ID.
+     *
+     * Values are the `AuctionHouseId` enum:
+     *  - 2 = Alliance
+     *  - 6 = Horde
+     *  - 7 = Neutral
+     *
+     * @return uint32 houseId
+     */
+    int GetHouseId(lua_State* L, AuctionHouseEntry* entry)
+    {
+        ALE::Push(L, entry ? entry->houseId : 0);
+        return 1;
+    }
+
+    /**
+     * Returns the faction template ID associated with this auction house entry.
+     *
+     * @return uint32 factionTemplateId
+     */
+    int GetFaction(lua_State* L, AuctionHouseEntry* entry)
+    {
+        ALE::Push(L, entry ? entry->faction : 0);
+        return 1;
+    }
+
+    /**
+     * Returns the deposit percentage configured for this auction house.
+     *
+     * @return uint32 depositPercent
+     */
+    int GetDepositPercent(lua_State* L, AuctionHouseEntry* entry)
+    {
+        ALE::Push(L, entry ? entry->depositPercent : 0);
+        return 1;
+    }
+
+    /**
+     * Returns the auction house cut percentage configured for this auction house.
+     *
+     * @return uint32 cutPercent
+     */
+    int GetCutPercent(lua_State* L, AuctionHouseEntry* entry)
+    {
+        ALE::Push(L, entry ? entry->cutPercent : 0);
+        return 1;
+    }
+
+    /**
      * @brief Calculates the required deposit for listing an item.
      * @param uint32 time - Auction duration in hours (e.g., 12, 24, 48).
      * @param Item item - The item object pointer to be auctioned.

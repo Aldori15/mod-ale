@@ -11,6 +11,22 @@
 namespace LuaAuctionEntry
 {
     /**
+     * Returns the auction house faction for this auction.
+     *
+     * Values are the `AuctionHouseFaction` enum:
+     *  - 0 = Alliance
+     *  - 1 = Horde
+     *  - 2 = Neutral
+     *
+     * @return uint8 factionId
+     */
+    int GetFactionId(lua_State* L, AuctionEntry* auction)
+    {
+        ALE::Push(L, static_cast<uint8>(auction->GetFactionId()));
+        return 1;
+    }
+
+    /**
      * Returns the auction ID
      * @return uint32 auctionId
      */
@@ -181,6 +197,17 @@ namespace LuaAuctionEntry
     }
 
     /**
+     * Returns the underlying AuctionHouse DBC entry used by this auction.
+     *
+     * @return AuctionHouseEntry houseEntry or nil
+     */
+    int GetAuctionHouseEntry(lua_State* L, AuctionEntry* auction)
+    {
+        ALE::Push(L, auction->auctionHouseEntry);
+        return 1;
+    }
+
+    /**
      * Returns the Item object from auction house cache
      * @return Item item or nil
      */
@@ -219,6 +246,35 @@ namespace LuaAuctionEntry
     {
         uint32 response = ALE::CHECKVAL<uint32>(L, 2);
         ALE::Push(L, auction->BuildAuctionMailSubject(static_cast<MailAuctionAnswers>(response)));
+        return 1;
+    }
+
+    /**
+     * Builds the auction mail body string for this auction.
+     *
+     * This wraps `AuctionEntry::BuildAuctionMailBody` using the current auction
+     * values by default. Optional overrides can be provided for advanced usage.
+     *
+     * @param ObjectGuid guid = bidderGuid : related guid to place in the body
+     * @param uint32 bid = currentBid
+     * @param uint32 buyout = buyoutPrice
+     * @param uint32 deposit = deposit
+     * @param uint32 cut = auctionCut
+     * @param uint32 moneyDelay = 0
+     * @param uint32 eta = 0
+     * @return string body
+     */
+    int BuildMailBody(lua_State* L, AuctionEntry* auction)
+    {
+        ObjectGuid guid = ALE::CHECKVAL<ObjectGuid>(L, 2, auction->bidder);
+        uint32 bid = ALE::CHECKVAL<uint32>(L, 3, auction->bid);
+        uint32 buyout = ALE::CHECKVAL<uint32>(L, 4, auction->buyout);
+        uint32 deposit = ALE::CHECKVAL<uint32>(L, 5, auction->deposit);
+        uint32 cut = ALE::CHECKVAL<uint32>(L, 6, auction->GetAuctionCut());
+        uint32 moneyDelay = ALE::CHECKVAL<uint32>(L, 7, 0);
+        uint32 eta = ALE::CHECKVAL<uint32>(L, 8, 0);
+
+        ALE::Push(L, AuctionEntry::BuildAuctionMailBody(guid, bid, buyout, deposit, cut, moneyDelay, eta));
         return 1;
     }
 };

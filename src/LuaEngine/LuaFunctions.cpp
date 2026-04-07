@@ -1885,6 +1885,7 @@ ALERegister<Transport> TransportMethods[] =
 ALERegister<AuctionEntry> AuctionEntryMethods[] =
 {
     // Getters
+    { "GetFactionId", &LuaAuctionEntry::GetFactionId },
     { "GetId", &LuaAuctionEntry::GetId },
     { "GetHouseId", &LuaAuctionEntry::GetHouseId },
     { "GetItemGuid", &LuaAuctionEntry::GetItemGuid },
@@ -1902,10 +1903,12 @@ ALERegister<AuctionEntry> AuctionEntryMethods[] =
     { "GetDeposit", &LuaAuctionEntry::GetDeposit },
     { "GetAuctionCut", &LuaAuctionEntry::GetAuctionCut },
     { "GetAuctionOutBid", &LuaAuctionEntry::GetAuctionOutBid },
+    { "GetAuctionHouseEntry", &LuaAuctionEntry::GetAuctionHouseEntry },
     { "GetItem", &LuaAuctionEntry::GetItem },
     { "HasBidder", &LuaAuctionEntry::HasBidder },
     { "IsExpired", &LuaAuctionEntry::IsExpired },
     { "BuildMailSubject", &LuaAuctionEntry::BuildMailSubject },
+    { "BuildMailBody", &LuaAuctionEntry::BuildMailBody },
 
     { NULL, NULL }
 };
@@ -1913,6 +1916,10 @@ ALERegister<AuctionEntry> AuctionEntryMethods[] =
 ALERegister<AuctionHouseEntry> AuctionMethods[] =
 {
     // Getters
+    { "GetHouseId", &LuaAuctionHouse::GetHouseId },
+    { "GetFaction", &LuaAuctionHouse::GetFaction },
+    { "GetDepositPercent", &LuaAuctionHouse::GetDepositPercent },
+    { "GetCutPercent", &LuaAuctionHouse::GetCutPercent },
     { "GetDeposit", &LuaAuctionHouse::GetDeposit },
     { "GetEntryFromFaction", &LuaAuctionHouse::GetEntryFromFaction },
     { "GetEntryFromHouse", &LuaAuctionHouse::GetEntryFromHouse },

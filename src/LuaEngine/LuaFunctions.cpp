@@ -1949,6 +1949,52 @@ luaL_Reg PlayerBotMethods[] =
     { "FindBotPlayer", &LuaGlobalBot::FindBotPlayer },
     { "CreateBotAccount", &LuaGlobalBot::CreateBotAccount },
     { "DeleteBotAccount", &LuaGlobalBot::DeleteBotAccount },
+    { "FindNewMaster", &LuaGlobalBot::FindNewMaster },
+    { "HasRealPlayerMaster", &LuaGlobalBot::HasRealPlayerMaster },
+    { "IsRealPlayer", &LuaGlobalBot::IsRealPlayer },
+    { "IsAltbot", &LuaGlobalBot::IsAltbot },
+    { "HasActivePlayerMaster", &LuaGlobalBot::HasActivePlayerMaster },
+
+    // AI / control
+    { "GetBotMaster", &LuaGlobalBot::GetBotMaster },
+    { "GetGroupLeader", &LuaGlobalBot::GetGroupLeader },
+    { "GetBotState", &LuaGlobalBot::GetBotState },
+    { "GetBotStrategies", &LuaGlobalBot::GetBotStrategies },
+    { "HasBotStrategy", &LuaGlobalBot::HasBotStrategy },
+    { "ChangeBotStrategy", &LuaGlobalBot::ChangeBotStrategy },
+    { "LeaveOrDisbandBotGroup", &LuaGlobalBot::LeaveOrDisbandBotGroup },
+    { "GetNearGroupMemberCount", &LuaGlobalBot::GetNearGroupMemberCount },
+    { "SendBotCommand", &LuaGlobalBot::SendBotCommand },
+    { "DoBotAction", &LuaGlobalBot::DoBotAction },
+
+    // Chat
+    { "BotTellMaster", &LuaGlobalBot::BotTellMaster },
+    { "BotSay", &LuaGlobalBot::BotSay },
+    { "BotSayToParty", &LuaGlobalBot::BotSayToParty },
+    { "BotSayToGuild", &LuaGlobalBot::BotSayToGuild },
+    { "BotSayToRaid", &LuaGlobalBot::BotSayToRaid },
+    { "BotYell", &LuaGlobalBot::BotYell },
+    { "BotWhisper", &LuaGlobalBot::BotWhisper },
+    { "BotTellError", &LuaGlobalBot::BotTellError },
+
+    // Spells / Auras
+    { "BotCanCastSpell", &LuaGlobalBot::BotCanCastSpell },
+    { "BotCastSpell", &LuaGlobalBot::BotCastSpell },
+    { "BotHasAura", &LuaGlobalBot::BotHasAura },
+    { "BotRemoveAura", &LuaGlobalBot::BotRemoveAura },
+
+    // Items
+    { "FindBotConsumable", &LuaGlobalBot::FindBotConsumable },
+    { "HasBotItemInInventory", &LuaGlobalBot::HasBotItemInInventory },
+    { "GetBotInventoryItemCount", &LuaGlobalBot::GetBotInventoryItemCount },
+
+    // Management
+    { "ListBots", &LuaGlobalBot::ListBotsByMaster },
+    { "GetPlayerbotsCount", &LuaGlobalBot::GetPlayerbotsCount },
+    { "GetPlayerbotsCountByClass", &LuaGlobalBot::GetPlayerbotsCountByClass },
+    { "LinkAccount", &LuaGlobalBot::LinkAccount },
+    { "UnlinkAccount", &LuaGlobalBot::UnlinkAccount },
+    { "ViewLinkedAccounts", &LuaGlobalBot::ViewLinkedAccounts },
 
     { NULL, NULL }
 };

@@ -648,7 +648,7 @@ public:
         PLAYERHOOK_ON_BEFORE_LOGOUT
     }) { }
 
-    void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool /*applySickness*/) override
+    void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool& /*applySickness*/) override
     {
         sALE->OnResurrect(player);
     }

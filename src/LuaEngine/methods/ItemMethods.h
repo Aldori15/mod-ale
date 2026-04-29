@@ -377,7 +377,7 @@ namespace LuaItem
     {
         uint32 enchant_slot = ALE::CHECKVAL<uint32>(L, 2);
 
-        if (enchant_slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
+        if (enchant_slot >= MAX_ENCHANTMENT_SLOT)
             return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
 
         ALE::Push(L, item->GetEnchantmentId(EnchantmentSlot(enchant_slot)));
@@ -693,7 +693,7 @@ namespace LuaItem
         }
 
         EnchantmentSlot slot = (EnchantmentSlot)ALE::CHECKVAL<uint32>(L, 3);
-        if (slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
+        if (slot >= MAX_ENCHANTMENT_SLOT)
             return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
 
         owner->ApplyEnchantment(item, slot, false);
@@ -744,7 +744,7 @@ namespace LuaItem
         }
 
         EnchantmentSlot slot = (EnchantmentSlot)ALE::CHECKVAL<uint32>(L, 2);
-        if (slot >= MAX_INSPECTED_ENCHANTMENT_SLOT)
+        if (slot >= MAX_ENCHANTMENT_SLOT)
             return luaL_argerror(L, 2, "valid EnchantmentSlot expected");
 
         if (!item->GetEnchantmentId(slot))

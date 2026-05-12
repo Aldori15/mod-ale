@@ -5206,6 +5206,7 @@ namespace LuaPlayer
             lua_pushinteger(L, spellId);
             lua_rawseti(L, -2, i++);
         }
+        return 1;
     }
     
     /**

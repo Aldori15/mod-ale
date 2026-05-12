@@ -5206,6 +5206,31 @@ namespace LuaPlayer
             lua_pushinteger(L, spellId);
             lua_rawseti(L, -2, i++);
         }
+    }
+    
+    /**
+     * Returns the [Player]s spent talent points in each talent tree for the active spec
+     *
+     * @return uint8 tree1, uint8 tree2, uint8 tree3
+     */
+    int GetTalentTreePoints(lua_State* L, Player* player)
+    {
+        uint8 specPoints[3] = {0, 0, 0};
+        player->GetTalentTreePoints(specPoints);
+        ALE::Push(L, specPoints[0]);
+        ALE::Push(L, specPoints[1]);
+        ALE::Push(L, specPoints[2]);
+        return 3;
+    }
+
+    /**
+     * Returns the index of the talent tree the [Player] has spent the most points in for the active spec
+     *
+     * @return uint8 treeIndex
+     */
+    int GetMostPointsTalentTree(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetMostPointsTalentTree());
         return 1;
     }
 };

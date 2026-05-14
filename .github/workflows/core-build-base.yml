@@ -14,8 +14,8 @@ jobs:
       - name: Check out AzerothCore 🧑‍💻
         uses: actions/checkout@v4
         with:
-          repository: 'azerothcore/azerothcore-wotlk'
-          ref: 'master'
+          repository: 'Aldori15/azerothcore-wotlk-playerbots'
+          ref: 'Playerbot'
           submodules: 'recursive'
           fetch-depth: 0
 

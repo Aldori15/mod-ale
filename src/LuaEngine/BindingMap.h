@@ -191,6 +191,7 @@ public:
             return;
 
         BindingList& list = result->second;
+        luaL_checkstack(L, static_cast<int>(list.size()), "not enough stack space to push function bindings");
         for (auto i = list.begin(); i != list.end();)
         {
             std::unique_ptr<Binding>& binding = (*i);

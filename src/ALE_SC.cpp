@@ -645,7 +645,8 @@ public:
         PLAYERHOOK_ON_UPDATE_SKILL,
         PLAYERHOOK_CAN_RESURRECT,
         PLAYERHOOK_ON_PLAYER_RELEASED_GHOST,
-        PLAYERHOOK_ON_BEFORE_LOGOUT
+        PLAYERHOOK_ON_BEFORE_LOGOUT,
+        PLAYERHOOK_ON_TARGET_CHANGED
     }) { }
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool& /*applySickness*/) override
@@ -771,6 +772,11 @@ public:
     void OnPlayerJustDied(Player* player) override
     {
         sALE->OnPlayerJustDied(player);
+    }
+
+    void OnPlayerTargetChanged(Player* player, Unit* oldTarget, Unit* newTarget) override
+    {
+        sALE->OnPlayerTargetChanged(player, oldTarget, newTarget);
     }
 
     void OnPlayerLevelChanged(Player* player, uint8 oldLevel) override

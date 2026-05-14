@@ -804,6 +804,7 @@ namespace LuaGlobalFunctions
      *     PLAYER_EVENT_ON_BEFORE_LOGOUT                        =     75,       // (event, player)
      *
      *     PLAYER_EVENT_ON_PLAYER_JUST_DIED                     =     80,       // (event, player)
+     *     PLAYER_EVENT_ON_TARGET_CHANGED                       =     81,       // (event, player, oldTarget, newTarget)
      * };
      * </pre>
      *

@@ -2585,7 +2585,7 @@ namespace LuaPlayer
     {
         int32 slot = ALE::CHECKVAL<int32>(L, 2);
 
-        if (slot >= EQUIPMENT_SLOT_START && slot < EQUIPMENT_SLOT_END)
+        if (slot >= static_cast<int32>(EQUIPMENT_SLOT_START) && slot < static_cast<int32>(EQUIPMENT_SLOT_END))
             player->DurabilityPointLossForEquipSlot((EquipmentSlots)slot);
         return 0;
     }

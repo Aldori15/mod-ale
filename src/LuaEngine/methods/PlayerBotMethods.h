@@ -278,7 +278,7 @@ namespace LuaGlobalBot
         std::string username = ALE::CHECKVAL<std::string>(L, 1);
         std::string password = ALE::CHECKVAL<std::string>(L, 2);
 
-        AccountOpResult result = AccountMgr::CreateAccount(username, password);
+        AccountOpResult result = sAccountMgr->CreateAccount(username, password);
         ALE::Push(L, static_cast<uint32>(result));
         return 1;
     }

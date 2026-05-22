@@ -2413,13 +2413,26 @@ namespace LuaPlayer
      * Sends a vendor window to the [Player] from the [WorldObject] specified.
      *
      * @param [WorldObject] sender
+     * @param uint32 vendorId = 0 : optional entry ID to use for the vendor item list, overriding the sender's default inventory
      */
     int SendListInventory(lua_State* L, Player* player)
     {
         WorldObject* obj = ALE::CHECKOBJ<WorldObject>(L, 2);
         uint32 vendorId = ALE::CHECKVAL<uint32>(L, 3, 0);
 
+        Creature* creature = obj->ToCreature();
+        bool addedVendorFlag = false;
+        if (vendorId && creature && !creature->HasNpcFlag(UNIT_NPC_FLAG_VENDOR))
+        {
+            creature->SetNpcFlag(UNIT_NPC_FLAG_VENDOR);
+            addedVendorFlag = true;
+        }
+
         player->GetSession()->SendListInventory(obj->GET_GUID(), vendorId);
+
+        if (addedVendorFlag)
+            creature->RemoveNpcFlag(UNIT_NPC_FLAG_VENDOR);
+
         return 0;
     }
 

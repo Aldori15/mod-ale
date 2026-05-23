@@ -50,9 +50,7 @@ jobs:
         run: |
           if ! grep -Rqs "void AddCustomScripts()" src/server/scripts/Custom 2>/dev/null; then
             mkdir -p src/server/scripts/Custom
-            cat > src/server/scripts/Custom/custom_script_loader.cpp << 'EOF'
-void AddCustomScripts() {}
-EOF
+            printf 'void AddCustomScripts() {}\n' > src/server/scripts/Custom/custom_script_loader.cpp
           fi
 
       - name: Build mod-eluna with ${{ inputs.lua_version }} 🏗️

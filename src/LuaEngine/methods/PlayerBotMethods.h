@@ -731,8 +731,8 @@ namespace LuaGlobalBot
         if (lua_isnumber(L, 2))
         {
             uint32 spellId = ALE::CHECKVAL<uint32>(L, 2);
-            Unit* player = ALE::CHECKOBJ<Unit>(L, 3, false);
-            ALE::Push(L, ai->HasAura(spellId, player));
+            Unit* target = ALE::CHECKOBJ<Unit>(L, 3, false);
+            ALE::Push(L, spellId && target && target->HasAura(spellId));
             return 1;
         }
         else

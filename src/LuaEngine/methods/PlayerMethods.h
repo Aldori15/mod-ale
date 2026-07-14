@@ -4194,6 +4194,177 @@ namespace LuaPlayer
     }
 
     /**
+     *  Returns the [Player] session total travel stat.
+     *
+     *  @return uint64 sessionTotal : the session total traveled stat in yards
+     */
+    int GetTravelStatSessionTotal(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetTravelStatSessionTotal());
+        return 1;
+    }
+
+    /**
+     *  Returns the [Player] walked travel stat.
+     *
+     *  NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
+     *
+     *  @return uint64 walked : the walked travel stat in yards
+     */
+    int GetTravelStatWalked(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetTravelStatWalked());
+        return 1;
+    }
+
+    /**
+     *  Returns the [Player] swimming travel stat.
+     *
+     *  @return uint64 swimming : the swimming travel stat in yards
+     */
+    int GetTravelStatSwimming(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetTravelStatSwimming());
+        return 1;
+    }
+
+    /**
+     *  Returns the [Player] mounted travel stat.
+     *
+     *  @return uint64 mounted : the mounted travel stat in yards
+     */
+    int GetTravelStatMounted(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetTravelStatMounted());
+        return 1;
+    }
+
+    /**
+     *  Returns the [Player] flying travel stat.
+     *
+     *  @return uint64 flying : the flying travel stat in yards
+     */
+    int GetTravelStatFlying(lua_State* L, Player* player)
+    {
+        ALE::Push(L, player->GetTravelStatFlying());
+        return 1;
+    }
+
+    /**
+     *  Adds to the [Player] session total travel stat.
+     *
+     * @param uint64 amount
+     */
+    int AddTravelStatSessionTotal(lua_State* L, Player* player)
+    {
+        player->AddTravelStatSessionTotal(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Adds to the [Player] walked travel stat.
+     *
+     *  NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
+     *
+     * @param uint64 amount
+     */
+    int AddTravelStatWalked(lua_State* L, Player* player)
+    {
+        player->AddTravelStatWalked(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Adds to the [Player] swimming travel stat.
+     *
+     * @param uint64 amount
+     */
+    int AddTravelStatSwimming(lua_State* L, Player* player)
+    {
+        player->AddTravelStatSwimming(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Adds to the [Player] mounted travel stat.
+     *
+     * @param uint64 amount
+     */
+    int AddTravelStatMounted(lua_State* L, Player* player)
+    {
+        player->AddTravelStatMounted(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Adds to the [Player] flying travel stat.
+     *
+     *  @return uint64 amount
+     */
+    int AddTravelStatFlying(lua_State* L, Player* player)
+    {
+        player->AddTravelStatFlying(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Removes from [Player] session total stat.
+     *
+     * @param uint64 amount
+     */
+    int RemoveTravelStatSessionTotal(lua_State* L, Player* player)
+    {
+        player->RemoveTravelStatSessionTotal(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Removes from [Player] walked travel stat.
+     *
+     *  NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
+     *
+     * @param uint64 amount
+     */
+    int RemoveTravelStatWalked(lua_State* L, Player* player)
+    {
+        player->RemoveTravelStatWalked(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Removes from [Player] swimming travel stat.
+     *
+     * @param uint64 amount
+     */
+    int RemoveTravelStatSwimming(lua_State* L, Player* player)
+    {
+        player->RemoveTravelStatSwimming(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Removes from [Player] mounted travel stat.
+     *
+     * @param uint64 amount
+     */
+    int RemoveTravelStatMounted(lua_State* L, Player* player)
+    {
+        player->RemoveTravelStatMounted(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
+     *  Removes from [Player] flying travel stat.
+     *
+     * @param uint64 amount
+     */
+    int RemoveTravelStatFlying(lua_State* L, Player* player)
+    {
+        player->RemoveTravelStatFlying(ALE::CHECKVAL<uint64>(L, 2));
+        return 0;
+    }
+
+    /**
      *  Teleports [Player] to a predefined location based on the teleport name.
      *
      *  @param string tele : The name of the predefined teleport location.

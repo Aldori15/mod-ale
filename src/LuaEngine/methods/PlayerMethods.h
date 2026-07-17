@@ -4117,7 +4117,7 @@ namespace LuaPlayer
     }
   
     /**
-     *  Returns the [Player] spells list
+     * Returns the [Player] spells list
      *
      * @return table playerSpells
      */
@@ -4167,9 +4167,9 @@ namespace LuaPlayer
     }
   
     /**
-     *  Returns the [Player] homebind location.
+     * Returns the [Player] homebind location.
      *
-     *  @return table homebind : a table containing the player's homebind information:
+     * @return table homebind : a table containing the player's homebind information:
      *      - uint32 mapId: The ID of the map where the player is bound.
      *      - float x: The X coordinate of the homebind location.
      *      - float y: The Y coordinate of the homebind location.
@@ -4194,9 +4194,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Returns the [Player] session total travel stat.
+     * Returns the [Player] session total travel stat.
      *
-     *  @return uint64 sessionTotal : the session total traveled stat in yards
+     * @return uint64 sessionTotal : the session total traveled stat in yards
      */
     int GetTravelStatSessionTotal(lua_State* L, Player* player)
     {
@@ -4205,11 +4205,11 @@ namespace LuaPlayer
     }
 
     /**
-     *  Returns the [Player] walked travel stat.
+     * Returns the [Player] walked travel stat.
      *
-     *  NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
+     * NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
      *
-     *  @return uint64 walked : the walked travel stat in yards
+     * @return uint64 walked : the walked travel stat in yards
      */
     int GetTravelStatWalked(lua_State* L, Player* player)
     {
@@ -4218,9 +4218,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Returns the [Player] swimming travel stat.
+     * Returns the [Player] swimming travel stat.
      *
-     *  @return uint64 swimming : the swimming travel stat in yards
+     * @return uint64 swimming : the swimming travel stat in yards
      */
     int GetTravelStatSwimming(lua_State* L, Player* player)
     {
@@ -4229,9 +4229,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Returns the [Player] mounted travel stat.
+     * Returns the [Player] mounted travel stat.
      *
-     *  @return uint64 mounted : the mounted travel stat in yards
+     * @return uint64 mounted : the mounted travel stat in yards
      */
     int GetTravelStatMounted(lua_State* L, Player* player)
     {
@@ -4240,9 +4240,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Returns the [Player] flying travel stat.
+     * Returns the [Player] flying travel stat.
      *
-     *  @return uint64 flying : the flying travel stat in yards
+     * @return uint64 flying : the flying travel stat in yards
      */
     int GetTravelStatFlying(lua_State* L, Player* player)
     {
@@ -4251,7 +4251,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Adds to the [Player] session total travel stat.
+     * Adds to the [Player] session total travel stat.
      *
      * @param uint64 amount
      */
@@ -4262,9 +4262,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Adds to the [Player] walked travel stat.
+     * Adds to the [Player] walked travel stat.
      *
-     *  NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
+     * NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
      *
      * @param uint64 amount
      */
@@ -4275,7 +4275,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Adds to the [Player] swimming travel stat.
+     * Adds to the [Player] swimming travel stat.
      *
      * @param uint64 amount
      */
@@ -4286,7 +4286,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Adds to the [Player] mounted travel stat.
+     * Adds to the [Player] mounted travel stat.
      *
      * @param uint64 amount
      */
@@ -4297,9 +4297,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Adds to the [Player] flying travel stat.
+     * Adds to the [Player] flying travel stat.
      *
-     *  @return uint64 amount
+     * @return uint64 amount
      */
     int AddTravelStatFlying(lua_State* L, Player* player)
     {
@@ -4308,7 +4308,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Removes from [Player] session total stat.
+     * Removes from [Player] session total stat.
      *
      * @param uint64 amount
      */
@@ -4319,9 +4319,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Removes from [Player] walked travel stat.
+     * Removes from [Player] walked travel stat.
      *
-     *  NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
+     * NOTE: Walked is both walking and running, so it is the total distance traveled on foot.
      *
      * @param uint64 amount
      */
@@ -4332,7 +4332,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Removes from [Player] swimming travel stat.
+     * Removes from [Player] swimming travel stat.
      *
      * @param uint64 amount
      */
@@ -4343,7 +4343,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Removes from [Player] mounted travel stat.
+     * Removes from [Player] mounted travel stat.
      *
      * @param uint64 amount
      */
@@ -4354,7 +4354,7 @@ namespace LuaPlayer
     }
 
     /**
-     *  Removes from [Player] flying travel stat.
+     * Removes from [Player] flying travel stat.
      *
      * @param uint64 amount
      */
@@ -4365,9 +4365,9 @@ namespace LuaPlayer
     }
 
     /**
-     *  Teleports [Player] to a predefined location based on the teleport name.
+     * Teleports [Player] to a predefined location based on the teleport name.
      *
-     *  @param string tele : The name of the predefined teleport location.
+     * @param string tele : The name of the predefined teleport location.
      */
     int TeleportTo(lua_State* L, Player* player)
     {

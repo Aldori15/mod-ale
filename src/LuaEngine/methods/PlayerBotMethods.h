@@ -1021,7 +1021,7 @@ namespace LuaGlobalBot
         }
 
         PlayerbotAI* ai = sPlayerbotsMgr.GetPlayerbotAI(bot);
-        ALE::Push(L, ai ? ai->IsAlt() : false);
+        ALE::Push(L, ai ? ai->IsAltBot() : false);
         return 1;
     }
 

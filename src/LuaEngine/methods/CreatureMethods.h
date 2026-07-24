@@ -1360,6 +1360,912 @@ namespace LuaCreature
         return 1;
     }
 
+    static uint32 CountUnlootedEntriesForIndex(
+        QuestItemMap const& map,
+        uint8 index)
+    {
+        uint32 count = 0;
+
+        for (QuestItemMap::const_iterator itr = map.begin();
+             itr != map.end(); ++itr)
+        {
+            if (!itr->second)
+                continue;
+
+            for (QuestItem const& entry : *itr->second)
+            {
+                if (entry.index == index && !entry.is_looted)
+                    ++count;
+            }
+        }
+
+        return count;
+    }
+
+    static uint32 CountMovedUnlootedItems(
+        Loot const& loot,
+        std::vector<bool> const& moveRegularItems)
+    {
+        uint32 count = 0;
+
+        QuestItemMap const& ffaMap = loot.GetPlayerFFAItems();
+        QuestItemMap const& conditionalMap =
+            loot.GetPlayerNonQuestNonFFAConditionalItems();
+        QuestItemMap const& questMap = loot.GetPlayerQuestItems();
+
+        for (std::size_t i = 0;
+             i < loot.items.size() && i < moveRegularItems.size(); ++i)
+        {
+            if (!moveRegularItems[i])
+                continue;
+
+            LootItem const& item = loot.items[i];
+            if (item.is_looted)
+                continue;
+
+            if (item.freeforall)
+            {
+                count += CountUnlootedEntriesForIndex(ffaMap, static_cast<uint8>(i));
+            }
+            else if (!item.conditions.empty())
+            {
+                if (CountUnlootedEntriesForIndex(conditionalMap, static_cast<uint8>(i)) > 0)
+                {
+                    ++count;
+                }
+            }
+            else
+            {
+                ++count;
+            }
+        }
+
+        for (std::size_t i = 0; i < loot.quest_items.size(); ++i)
+        {
+            LootItem const& item = loot.quest_items[i];
+            if (item.is_looted)
+                continue;
+
+            uint32 playerEntries = CountUnlootedEntriesForIndex(
+                questMap, static_cast<uint8>(i));
+
+            if (item.freeforall)
+                count += playerEntries;
+            else if (playerEntries > 0)
+                ++count;
+        }
+
+        return count;
+    }
+
+    static QuestItem const* FindLootViewEntry(
+    QuestItemMap const& map,
+    ObjectGuid playerGuid,
+    uint8 index)
+{
+    QuestItemMap::const_iterator itr = map.find(playerGuid);
+    if (itr == map.end() || !itr->second)
+        return nullptr;
+
+    for (QuestItem const& entry : *itr->second)
+    {
+        if (entry.index == index)
+            return &entry;
+    }
+
+    return nullptr;
+}
+
+    static bool SameLootViewForIndex(
+        QuestItemMap const& left,
+        uint8 leftIndex,
+        QuestItemMap const& right,
+        uint8 rightIndex)
+    {
+        for (QuestItemMap::const_iterator itr = left.begin();
+            itr != left.end(); ++itr)
+        {
+            QuestItem const* leftEntry =
+                FindLootViewEntry(left, itr->first, leftIndex);
+
+            QuestItem const* rightEntry =
+                FindLootViewEntry(right, itr->first, rightIndex);
+
+            if ((leftEntry == nullptr) != (rightEntry == nullptr))
+                return false;
+
+            if (leftEntry &&
+                leftEntry->is_looted != rightEntry->is_looted)
+            {
+                return false;
+            }
+        }
+
+        for (QuestItemMap::const_iterator itr = right.begin();
+            itr != right.end(); ++itr)
+        {
+            QuestItem const* leftEntry =
+                FindLootViewEntry(left, itr->first, leftIndex);
+
+            QuestItem const* rightEntry =
+                FindLootViewEntry(right, itr->first, rightIndex);
+
+            if ((leftEntry == nullptr) != (rightEntry == nullptr))
+                return false;
+        }
+
+        return true;
+    }
+
+    static bool SameLootItemMetadata(
+        LootItem const& left,
+        LootItem const& right)
+    {
+        return left.itemid == right.itemid &&
+            left.randomSuffix == right.randomSuffix &&
+            left.randomPropertyId == right.randomPropertyId &&
+            left.conditions == right.conditions &&
+            left.allowedGUIDs == right.allowedGUIDs &&
+            left.rollWinnerGUID == right.rollWinnerGUID &&
+            left.is_looted == right.is_looted &&
+            left.is_blocked == right.is_blocked &&
+            left.freeforall == right.freeforall &&
+            left.is_underthreshold == right.is_underthreshold &&
+            left.is_counted == right.is_counted &&
+            left.needs_quest == right.needs_quest &&
+            left.follow_loot_rules == right.follow_loot_rules &&
+            left.groupid == right.groupid;
+    }
+
+    static bool CanStackRegularLootItems(
+        LootItem const& destination,
+        LootItem const& source,
+        Group* group,
+        LootMethod lootMethod)
+    {
+        if (!SameLootItemMetadata(destination, source))
+            return false;
+
+        if (uint32(destination.count) + uint32(source.count) > 255u)
+            return false;
+
+        ItemTemplate const* itemTemplate =
+            sObjectMgr->GetItemTemplate(source.itemid);
+
+        if (!itemTemplate || itemTemplate->MaxCount > 0)
+            return false;
+
+        if (group && !source.freeforall && !source.conditions.empty())
+        {
+            return false;
+        }
+
+        bool usesGroupAssignment = group &&
+            (lootMethod == GROUP_LOOT ||
+            lootMethod == NEED_BEFORE_GREED ||
+            lootMethod == MASTER_LOOT);
+
+        // Separate above-threshold entries must retain separate rolls
+        // or master-loot assignments.
+        if (usesGroupAssignment &&
+            !source.freeforall &&
+            !source.is_underthreshold)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    static bool CanStackQuestLootItems(
+        LootItem const& destination,
+        LootItem const& source,
+        Group* group)
+    {
+        if (!SameLootItemMetadata(destination, source))
+            return false;
+
+        if (uint32(destination.count) + uint32(source.count) > 255u)
+            return false;
+
+        ItemTemplate const* itemTemplate =
+            sObjectMgr->GetItemTemplate(source.itemid);
+
+        if (!itemTemplate || itemTemplate->MaxCount > 0)
+            return false;
+
+        // In groups, only per-player/FFA quest loot is safe to stack.
+        if (group && !source.freeforall)
+            return false;
+
+        return true;
+    }
+
+    static void RemapLootViewMap(
+        QuestItemMap& map,
+        std::vector<int32> const& indexMap)
+    {
+        for (QuestItemMap::iterator itr = map.begin();
+            itr != map.end();)
+        {
+            QuestItemList* list = itr->second;
+            if (!list)
+            {
+                itr = map.erase(itr);
+                continue;
+            }
+
+            QuestItemList remapped;
+
+            for (QuestItem const& entry : *list)
+            {
+                if (entry.index >= indexMap.size())
+                    continue;
+
+                int32 newIndex = indexMap[entry.index];
+                if (newIndex < 0)
+                    continue;
+
+                bool found = false;
+
+                for (QuestItem& existing : remapped)
+                {
+                    if (existing.index ==
+                        static_cast<uint8>(newIndex))
+                    {
+                        // Compatible slots have matching state. AND is
+                        // conservative if inconsistent input is encountered.
+                        existing.is_looted =
+                            existing.is_looted && entry.is_looted;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    QuestItem copiedEntry = entry;
+                    copiedEntry.index = static_cast<uint8>(newIndex);
+                    remapped.push_back(copiedEntry);
+                }
+            }
+
+            if (remapped.empty())
+            {
+                delete list;
+                itr = map.erase(itr);
+            }
+            else
+            {
+                *list = std::move(remapped);
+                ++itr;
+            }
+        }
+    }
+
+    static void CoalesceCompatibleLoot(
+        Loot& loot,
+        Group* group,
+        LootMethod lootMethod)
+    {
+        QuestItemMap& ffaMap =
+            const_cast<QuestItemMap&>(loot.GetPlayerFFAItems());
+
+        QuestItemMap& conditionalMap =
+            const_cast<QuestItemMap&>(loot.GetPlayerNonQuestNonFFAConditionalItems());
+
+        QuestItemMap& questMap =
+            const_cast<QuestItemMap&>(loot.GetPlayerQuestItems());
+
+        // Regular items
+        std::vector<LootItem> oldItems = std::move(loot.items);
+        std::vector<int32> itemIndexMap(oldItems.size(), -1);
+        std::vector<uint8> representativeIndex;
+
+        loot.items.clear();
+        loot.items.reserve(oldItems.size());
+
+        for (std::size_t oldIndex = 0;
+            oldIndex < oldItems.size(); ++oldIndex)
+        {
+            LootItem const& sourceItem = oldItems[oldIndex];
+            int32 destinationIndex = -1;
+
+            for (std::size_t currentIndex = 0;
+                currentIndex < loot.items.size(); ++currentIndex)
+            {
+                if (!CanStackRegularLootItems(
+                        loot.items[currentIndex],
+                        sourceItem,
+                        group,
+                        lootMethod))
+                {
+                    continue;
+                }
+
+                uint8 representative =
+                    representativeIndex[currentIndex];
+
+                bool sameView = true;
+
+                if (sourceItem.freeforall)
+                {
+                    sameView = SameLootViewForIndex(
+                        ffaMap,
+                        static_cast<uint8>(oldIndex),
+                        ffaMap,
+                        representative);
+                }
+                else if (!sourceItem.conditions.empty())
+                {
+                    sameView = SameLootViewForIndex(
+                        conditionalMap,
+                        static_cast<uint8>(oldIndex),
+                        conditionalMap,
+                        representative);
+                }
+
+                if (!sameView)
+                    continue;
+
+                destinationIndex = static_cast<int32>(currentIndex);
+                break;
+            }
+
+            if (destinationIndex >= 0)
+            {
+                LootItem& destination = loot.items[destinationIndex];
+
+                destination.count = static_cast<uint8>(
+                    uint32(destination.count) + uint32(sourceItem.count));
+
+                itemIndexMap[oldIndex] = destinationIndex;
+            }
+            else
+            {
+                LootItem copiedItem = sourceItem;
+                copiedItem.itemIndex = static_cast<uint32>(loot.items.size());
+
+                itemIndexMap[oldIndex] = static_cast<int32>(loot.items.size());
+
+                representativeIndex.push_back(static_cast<uint8>(oldIndex));
+
+                loot.items.push_back(copiedItem);
+            }
+        }
+
+        RemapLootViewMap(ffaMap, itemIndexMap);
+        RemapLootViewMap(conditionalMap, itemIndexMap);
+
+        // Quest items
+        std::vector<LootItem> oldQuestItems = std::move(loot.quest_items);
+
+        std::vector<int32> questIndexMap(oldQuestItems.size(), -1);
+
+        std::vector<uint8> questRepresentativeIndex;
+
+        loot.quest_items.clear();
+        loot.quest_items.reserve(oldQuestItems.size());
+
+        for (std::size_t oldIndex = 0;
+            oldIndex < oldQuestItems.size(); ++oldIndex)
+        {
+            LootItem const& sourceItem = oldQuestItems[oldIndex];
+
+            int32 destinationIndex = -1;
+
+            for (std::size_t currentIndex = 0;
+                currentIndex < loot.quest_items.size();
+                ++currentIndex)
+            {
+                if (!CanStackQuestLootItems(
+                        loot.quest_items[currentIndex],
+                        sourceItem,
+                        group))
+                {
+                    continue;
+                }
+
+                uint8 representative =
+                    questRepresentativeIndex[currentIndex];
+
+                if (!SameLootViewForIndex(
+                        questMap,
+                        static_cast<uint8>(oldIndex),
+                        questMap,
+                        representative))
+                {
+                    continue;
+                }
+
+                destinationIndex = static_cast<int32>(currentIndex);
+                break;
+            }
+
+            if (destinationIndex >= 0)
+            {
+                LootItem& destination = loot.quest_items[destinationIndex];
+
+                destination.count = static_cast<uint8>(
+                    uint32(destination.count) + uint32(sourceItem.count));
+
+                questIndexMap[oldIndex] = destinationIndex;
+            }
+            else
+            {
+                LootItem copiedItem = sourceItem;
+                copiedItem.itemIndex = static_cast<uint32>(loot.quest_items.size());
+
+                questIndexMap[oldIndex] = static_cast<int32>(loot.quest_items.size());
+
+                questRepresentativeIndex.push_back(static_cast<uint8>(oldIndex));
+
+                loot.quest_items.push_back(copiedItem);
+            }
+        }
+
+        RemapLootViewMap(questMap, questIndexMap);
+
+        std::vector<bool> allRegularItems(loot.items.size(), true);
+
+        loot.unlootedCount = static_cast<uint8>(
+            CountMovedUnlootedItems(loot, allRegularItems));
+    }
+
+    static bool CanAppendQuestViews(
+        QuestItemMap const& destination,
+        QuestItemMap const& source,
+        std::size_t regularSlots)
+    {
+        for (QuestItemMap::const_iterator itr = destination.begin();
+             itr != destination.end(); ++itr)
+        {
+            std::size_t questSlots = itr->second ? itr->second->size() : 0;
+
+            QuestItemMap::const_iterator sourceItr =
+                source.find(itr->first);
+
+            if (sourceItr != source.end() && sourceItr->second)
+                questSlots += sourceItr->second->size();
+
+            if (regularSlots + questSlots > MAX_NR_LOOT_ITEMS)
+                return false;
+        }
+
+        for (QuestItemMap::const_iterator itr = source.begin();
+             itr != source.end(); ++itr)
+        {
+            if (destination.find(itr->first) != destination.end())
+                continue;
+
+            std::size_t questSlots = itr->second ? itr->second->size() : 0;
+
+            if (regularSlots + questSlots > MAX_NR_LOOT_ITEMS)
+                return false;
+        }
+
+        return true;
+    }
+
+    static void SplitLootViewMap(
+        QuestItemMap& source,
+        QuestItemMap& destination,
+        std::vector<int32> const& sourceIndexByOldIndex,
+        std::vector<int32> const& destinationIndexByOldIndex)
+    {
+        for (QuestItemMap::iterator itr = source.begin();
+             itr != source.end();)
+        {
+            QuestItemList* sourceList = itr->second;
+            if (!sourceList)
+            {
+                itr = source.erase(itr);
+                continue;
+            }
+
+            QuestItemList retained;
+
+            for (QuestItem const& sourceEntry : *sourceList)
+            {
+                std::size_t oldIndex = sourceEntry.index;
+                if (oldIndex >= sourceIndexByOldIndex.size() ||
+                    oldIndex >= destinationIndexByOldIndex.size())
+                {
+                    continue;
+                }
+
+                int32 destinationIndex =
+                    destinationIndexByOldIndex[oldIndex];
+
+                if (destinationIndex >= 0)
+                {
+                    QuestItemList*& destinationList = destination[itr->first];
+
+                    if (!destinationList)
+                        destinationList = new QuestItemList();
+
+                    QuestItem copiedEntry = sourceEntry;
+                    copiedEntry.index = static_cast<uint8>(destinationIndex);
+                    destinationList->push_back(copiedEntry);
+                    continue;
+                }
+
+                int32 retainedIndex =
+                    sourceIndexByOldIndex[oldIndex];
+
+                if (retainedIndex >= 0)
+                {
+                    QuestItem copiedEntry = sourceEntry;
+                    copiedEntry.index = static_cast<uint8>(retainedIndex);
+                    retained.push_back(copiedEntry);
+                }
+            }
+
+            if (retained.empty())
+            {
+                delete sourceList;
+                itr = source.erase(itr);
+            }
+            else
+            {
+                *sourceList = std::move(retained);
+                ++itr;
+            }
+        }
+    }
+
+    static bool ShouldUseOwnerSpecificLootView(
+        LootItem const& item,
+        Group* sourceGroup,
+        LootMethod lootMethod,
+        ObjectGuid sourceRoundRobinPlayer,
+        ObjectGuid anchorRoundRobinPlayer)
+    {
+        if (item.is_looted ||
+            item.freeforall ||
+            !item.conditions.empty() ||
+            !sourceGroup ||
+            lootMethod == FREE_FOR_ALL)
+        {
+            return false;
+        }
+
+        if (!sourceRoundRobinPlayer ||
+            sourceRoundRobinPlayer == anchorRoundRobinPlayer)
+        {
+            return false;
+        }
+
+        if (lootMethod == ROUND_ROBIN)
+            return true;
+
+        bool usesRoundRobinForLowQuality =
+            lootMethod == GROUP_LOOT ||
+            lootMethod == NEED_BEFORE_GREED ||
+            lootMethod == MASTER_LOOT;
+
+        return usesRoundRobinForLowQuality &&
+            item.is_underthreshold;
+    }
+
+    static void MakeRegularLootOwnerSpecific(
+        Loot& loot,
+        std::size_t itemIndex,
+        ObjectGuid ownerGuid)
+    {
+        if (!ownerGuid || itemIndex >= loot.items.size())
+            return;
+
+        LootItem& item = loot.items[itemIndex];
+        item.freeforall = true;
+
+        QuestItemMap& ffaMap =
+            const_cast<QuestItemMap&>(
+                loot.GetPlayerFFAItems());
+
+        QuestItemList*& ownerList = ffaMap[ownerGuid];
+
+        if (!ownerList)
+            ownerList = new QuestItemList();
+
+        for (QuestItem const& entry : *ownerList)
+        {
+            if (entry.index == itemIndex)
+                return;
+        }
+
+        ownerList->push_back(
+            QuestItem(static_cast<uint8>(itemIndex)));
+    }
+
+    static bool ShouldMoveRegularItem(
+        LootItem const& item,
+        Group* sourceGroup,
+        LootMethod lootMethod,
+        ObjectGuid sourceRoundRobinPlayer,
+        ObjectGuid anchorRoundRobinPlayer)
+    {
+        if (item.is_looted)
+            return false;
+
+        // Per-player maps preserve access for these items.
+        if (item.freeforall || !item.conditions.empty())
+            return true;
+
+        if (!sourceGroup || lootMethod == FREE_FOR_ALL)
+            return true;
+
+        bool sameRoundRobinOwner =
+            sourceRoundRobinPlayer == anchorRoundRobinPlayer;
+
+        if (lootMethod == ROUND_ROBIN)
+            return sameRoundRobinOwner;
+
+        return !item.is_underthreshold || sameRoundRobinOwner;
+    }
+
+    /**
+     * Selectively consolidates unopened source-creature loot into this
+     * creature while preserving stock AzerothCore group-loot behavior.
+     *
+     * Round-robin loot from different owners is preserved through
+     * owner specific per-player loot views.
+     *
+     * @param Creature source
+     * @param Player player
+     * @return bool merged
+     */
+    int MergeLootFrom(lua_State* L, Creature* anchor)
+    {
+        Creature* source = ALE::CHECKOBJ<Creature>(L, 2);
+        Player* player = ALE::CHECKOBJ<Player>(L, 3);
+
+        auto ReturnResult = [L](bool result)
+        {
+            ALE::Push(L, result);
+            return 1;
+        };
+
+        if (!source || !player || source == anchor)
+            return ReturnResult(false);
+
+        if (!player->IsAlive() || anchor->IsAlive() || source->IsAlive())
+            return ReturnResult(false);
+
+        if (!anchor->GetMap() ||
+            anchor->GetMap() != source->GetMap() ||
+            anchor->GetMap() != player->GetMap())
+        {
+            return ReturnResult(false);
+        }
+
+        // Prevent forged remote-loot packets from moving loot.
+        if (!player->IsWithinDistInMap(anchor, INTERACTION_DISTANCE) ||
+            !player->IsWithinDistInMap(source, 50.0f))
+        {
+            return ReturnResult(false);
+        }
+
+        if (!anchor->HasDynamicFlag(UNIT_DYNFLAG_LOOTABLE) ||
+            !source->HasDynamicFlag(UNIT_DYNFLAG_LOOTABLE))
+        {
+            return ReturnResult(false);
+        }
+
+        Group* playerGroup = player->GetGroup();
+        Group* anchorGroup = anchor->GetLootRecipientGroup();
+        Group* sourceGroup = source->GetLootRecipientGroup();
+
+        if (playerGroup)
+        {
+            if (anchorGroup != playerGroup || sourceGroup != playerGroup)
+                return ReturnResult(false);
+        }
+        else
+        {
+            if (anchorGroup || sourceGroup ||
+                anchor->GetLootRecipientGUID() != player->GetGUID() ||
+                source->GetLootRecipientGUID() != player->GetGUID())
+            {
+                return ReturnResult(false);
+            }
+        }
+
+        if (!player->isAllowedToLoot(anchor))
+            return ReturnResult(false);
+
+        Loot& anchorLoot = anchor->loot;
+        Loot& sourceLoot = source->loot;
+
+        // Only untouched loot may be consolidated. Active rolls and
+        // partially looted per-player containers remain unchanged.
+        if (anchorLoot.loot_type != LOOT_NONE ||
+            sourceLoot.loot_type != LOOT_NONE ||
+            sourceLoot.isLooted())
+        {
+            return ReturnResult(false);
+        }
+
+        if (sourceLoot.items.empty() &&
+            sourceLoot.quest_items.empty() &&
+            sourceLoot.gold == 0)
+        {
+            return ReturnResult(false);
+        }
+
+        LootMethod lootMethod =
+            sourceGroup ? sourceGroup->GetLootMethod() : FREE_FOR_ALL;
+
+        CoalesceCompatibleLoot(anchorLoot, sourceGroup, lootMethod);
+        CoalesceCompatibleLoot(sourceLoot, sourceGroup, lootMethod);
+
+        std::vector<bool> moveRegularItems(sourceLoot.items.size(), false);
+
+        std::size_t movedRegularCount = 0;
+
+        for (std::size_t i = 0; i < sourceLoot.items.size(); ++i)
+        {
+            if (ShouldUseOwnerSpecificLootView(
+                    sourceLoot.items[i],
+                    sourceGroup,
+                    lootMethod,
+                    sourceLoot.roundRobinPlayer,
+                    anchorLoot.roundRobinPlayer))
+            {
+                MakeRegularLootOwnerSpecific(
+                    sourceLoot,
+                    i,
+                    sourceLoot.roundRobinPlayer);
+            }
+
+            if (ShouldMoveRegularItem(
+                    sourceLoot.items[i],
+                    sourceGroup,
+                    lootMethod,
+                    sourceLoot.roundRobinPlayer,
+                    anchorLoot.roundRobinPlayer))
+            {
+                moveRegularItems[i] = true;
+                ++movedRegularCount;
+            }
+        }
+
+        bool hasMovableLoot =
+            movedRegularCount > 0 ||
+            !sourceLoot.quest_items.empty() ||
+            sourceLoot.gold > 0;
+
+        if (!hasMovableLoot)
+            return ReturnResult(false);
+
+        std::size_t newRegularCount =
+            anchorLoot.items.size() + movedRegularCount;
+
+        if (newRegularCount > MAX_NR_LOOT_ITEMS ||
+            anchorLoot.quest_items.size() + sourceLoot.quest_items.size() > MAX_NR_QUEST_ITEMS)
+        {
+            return ReturnResult(false);
+        }
+
+        QuestItemMap& anchorQuestMap =
+            const_cast<QuestItemMap&>(anchorLoot.GetPlayerQuestItems());
+
+        QuestItemMap& sourceQuestMap =
+            const_cast<QuestItemMap&>(sourceLoot.GetPlayerQuestItems());
+
+        if (!CanAppendQuestViews(anchorQuestMap, sourceQuestMap, newRegularCount))
+        {
+            return ReturnResult(false);
+        }
+
+        uint32 movedUnlootedCount = CountMovedUnlootedItems(sourceLoot, moveRegularItems);
+
+        if (movedUnlootedCount > sourceLoot.unlootedCount ||
+            uint32(anchorLoot.unlootedCount) + movedUnlootedCount > 255u ||
+            sourceLoot.gold > 0xFFFFFFFFu - anchorLoot.gold)
+        {
+            return ReturnResult(false);
+        }
+
+        std::vector<int32> sourceItemIndex(sourceLoot.items.size(), -1);
+        std::vector<int32> anchorItemIndex(sourceLoot.items.size(), -1);
+
+        std::vector<LootItem> retainedItems;
+        retainedItems.reserve(sourceLoot.items.size() - movedRegularCount);
+
+        for (std::size_t oldIndex = 0;
+             oldIndex < sourceLoot.items.size(); ++oldIndex)
+        {
+            LootItem copiedItem = sourceLoot.items[oldIndex];
+
+            if (moveRegularItems[oldIndex])
+            {
+                copiedItem.itemIndex =
+                    static_cast<uint32>(anchorLoot.items.size());
+
+                anchorItemIndex[oldIndex] =
+                    static_cast<int32>(anchorLoot.items.size());
+
+                anchorLoot.items.push_back(copiedItem);
+            }
+            else
+            {
+                copiedItem.itemIndex =
+                    static_cast<uint32>(retainedItems.size());
+
+                sourceItemIndex[oldIndex] =
+                    static_cast<int32>(retainedItems.size());
+
+                retainedItems.push_back(copiedItem);
+            }
+        }
+
+        sourceLoot.items = std::move(retainedItems);
+
+        std::vector<int32> sourceQuestIndex(sourceLoot.quest_items.size(), -1);
+        std::vector<int32> anchorQuestIndex(sourceLoot.quest_items.size(), -1);
+
+        for (std::size_t oldIndex = 0;
+             oldIndex < sourceLoot.quest_items.size(); ++oldIndex)
+        {
+            LootItem copiedItem =
+                sourceLoot.quest_items[oldIndex];
+
+            copiedItem.itemIndex =
+                static_cast<uint32>(anchorLoot.quest_items.size());
+
+            anchorQuestIndex[oldIndex] =
+                static_cast<int32>(anchorLoot.quest_items.size());
+
+            anchorLoot.quest_items.push_back(copiedItem);
+        }
+
+        sourceLoot.quest_items.clear();
+
+        QuestItemMap& anchorFFAMap =
+            const_cast<QuestItemMap&>(anchorLoot.GetPlayerFFAItems());
+
+        QuestItemMap& sourceFFAMap =
+            const_cast<QuestItemMap&>(sourceLoot.GetPlayerFFAItems());
+
+        QuestItemMap& anchorConditionalMap =
+            const_cast<QuestItemMap&>(anchorLoot.GetPlayerNonQuestNonFFAConditionalItems());
+
+        QuestItemMap& sourceConditionalMap =
+            const_cast<QuestItemMap&>(sourceLoot.GetPlayerNonQuestNonFFAConditionalItems());
+
+        SplitLootViewMap(sourceFFAMap, anchorFFAMap, sourceItemIndex, anchorItemIndex);
+        SplitLootViewMap(sourceConditionalMap, anchorConditionalMap, sourceItemIndex, anchorItemIndex);
+        SplitLootViewMap(sourceQuestMap, anchorQuestMap, sourceQuestIndex, anchorQuestIndex);
+
+        anchorLoot.gold += sourceLoot.gold;
+        sourceLoot.gold = 0;
+
+        anchorLoot.unlootedCount =
+            static_cast<uint8>(uint32(anchorLoot.unlootedCount) + movedUnlootedCount);
+
+        sourceLoot.unlootedCount =
+            static_cast<uint8>(uint32(sourceLoot.unlootedCount) - movedUnlootedCount);
+
+        CoalesceCompatibleLoot(anchorLoot, sourceGroup, lootMethod);
+
+        if (sourceLoot.isLooted())
+        {
+            // Required for skinning and mob engineering.
+            source->AllLootRemovedFromCorpse();
+            sourceLoot.clear();
+            source->RemoveDynamicFlag(UNIT_DYNFLAG_LOOTABLE);
+        }
+        else
+        {
+            // Round-robin loot with a different anchor owner remains here.
+            source->ForceValuesUpdateAtIndex(UNIT_DYNAMIC_FLAGS);
+        }
+
+        anchor->ForceValuesUpdateAtIndex(UNIT_DYNAMIC_FLAGS);
+        return ReturnResult(true);
+    }
+
     /**
      * Returns the [Creature]'s loot.
      *

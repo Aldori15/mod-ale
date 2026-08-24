@@ -331,6 +331,8 @@ ALERegister<Unit> UnitMethods[] =
     { "GetRaceAsString", &LuaUnit::GetRaceAsString },
     { "GetClassAsString", &LuaUnit::GetClassAsString },
     { "GetAura", &LuaUnit::GetAura },
+    { "GetAuras", &LuaUnit::GetAuras },
+    { "GetVisibleAuras", &LuaUnit::GetVisibleAuras },
     { "GetFaction", &LuaUnit::GetFaction },
     { "GetCurrentSpell", &LuaUnit::GetCurrentSpell },
     { "GetCreatureType", &LuaUnit::GetCreatureType },
@@ -783,6 +785,7 @@ ALERegister<Player> PlayerMethods[] =
     { "RemoveItem", &LuaPlayer::RemoveItem },
     { "RemoveLifetimeKills", &LuaPlayer::RemoveLifetimeKills },
     { "ResurrectPlayer", &LuaPlayer::ResurrectPlayer },
+    { "RepopAtGraveyard", &LuaPlayer::RepopAtGraveyard },
     { "EquipItem", &LuaPlayer::EquipItem },
     { "ResetSpellCooldown", &LuaPlayer::ResetSpellCooldown },
     { "ResetTypeCooldowns", &LuaPlayer::ResetTypeCooldowns },
@@ -1131,6 +1134,9 @@ ALERegister<Aura> AuraMethods[] =
     { "GetAuraId", &LuaAura::GetAuraId },
     { "GetStackAmount", &LuaAura::GetStackAmount },
     { "GetOwner", &LuaAura::GetOwner },
+    { "GetCharges", &LuaAura::GetCharges },
+    { "IsPassive", &LuaAura::IsPassive },
+    { "GetSpellInfo", &LuaAura::GetSpellInfo },
 
     // Setters
     { "SetDuration", &LuaAura::SetDuration },

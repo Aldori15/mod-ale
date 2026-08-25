@@ -1981,10 +1981,10 @@ luaL_Reg PlayerBotMethods[] =
     { "CreateBotAccount", &LuaGlobalBot::CreateBotAccount },
     { "DeleteBotAccount", &LuaGlobalBot::DeleteBotAccount },
     { "FindNewMaster", &LuaGlobalBot::FindNewMaster },
-    { "HasRealPlayerMaster", &LuaGlobalBot::HasRealPlayerMaster },
-    { "IsRealPlayer", &LuaGlobalBot::IsRealPlayer },
+    { "HasGameClientMaster", &LuaGlobalBot::HasGameClientMaster },
+    { "IsSelfBot", &LuaGlobalBot::IsSelfBot },
     { "IsAltbot", &LuaGlobalBot::IsAltbot },
-    { "HasActivePlayerMaster", &LuaGlobalBot::HasActivePlayerMaster },
+    { "HasRealPlayerMaster", &LuaGlobalBot::HasRealPlayerMaster },
 
     // AI / control
     { "GetBotMaster", &LuaGlobalBot::GetBotMaster },

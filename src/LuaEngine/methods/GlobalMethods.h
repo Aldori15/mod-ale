@@ -2469,7 +2469,7 @@ namespace LuaGlobalFunctions
                 lua_insert(L, end++);
                 // Stack: {nodes}, mountA, mountH, price, pathid, {nodes}, node, key, value
             }
-            TaxiPathNodeEntry entry;
+            TaxiPathNodeEntry entry{};
             // mandatory
             entry.mapid = ALE::CHECKVAL<uint32>(L, start);
             entry.x = ALE::CHECKVAL<float>(L, start + 1);
@@ -2498,7 +2498,7 @@ namespace LuaGlobalFunctions
         if (!pathId)
             pathId = sTaxiPathNodesByPath.size();
         if (sTaxiPathNodesByPath.size() <= pathId)
-            sTaxiPathNodesByPath.resize(pathId + 1);
+            sTaxiPathNodesByPath.resize(static_cast<std::size_t>(pathId) + 1);
 
         sTaxiPathNodesByPath[pathId].clear();
         sTaxiPathNodesByPath[pathId].resize(nodes.size());
